@@ -1,0 +1,13 @@
+Title:
+Test Board 01
+Width:
+5
+Height:
+5
+Mapping:
+XXXXX
+XXXXX
+XXXXX
+XXXXX
+XXXXX
+/break/
