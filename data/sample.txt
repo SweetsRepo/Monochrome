@@ -5,9 +5,9 @@ Width:
 Height:
 5
 Mapping:
-XXXXX
-XXXXX
-XXXXX
-XXXXX
-XXXXX
+GGGGG
+GGGGG
+GGGG
+GGGGG
+GGGGG
 /break/

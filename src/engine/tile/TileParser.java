@@ -1,4 +1,4 @@
-package engine;
+package engine.tile;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -54,12 +54,23 @@ public class TileParser {
 					for(int r = this.height; r > 0; r--){
 						ArrayList<Tile> row = new ArrayList<Tile>();
 						aLine = textReader.readLine();
-						for(int c = 0; c < aLine.length(); c++){
+						if(this.width != aLine.length()){
+							//These should all be converted into parser exceptions
+							System.err.println("Row length is not uniform, please reveiw map file at line "+r);
+						}
+						for(int c = 0; c < this.width; c++){
 							switch(aLine.charAt(c)){
-								case 'X':
-									//Parse generic tile
-									//Add to ArrayList
+								case 'G':
+									row.add(new GreyTile());
 									break;
+								case 'L':
+									row.add(new LightTile());
+									break;
+								case 'D':
+									row.add(new DarkTile());
+									break;
+								default:
+									System.err.println("Unexpected Character encountered, please review map file at line "+r);
 							}
 						}
 						//Add new row to the 2D Array List
@@ -67,7 +78,7 @@ public class TileParser {
 					}
 					break;
 				default:
-					System.err.println("Unexpected character encountered, please review map file");
+					System.err.println("Unexpected Header encountered, please review map file");
 			}	
 		}
 		textReader.close();
@@ -79,6 +90,10 @@ public class TileParser {
 			System.out.println("Title: "+ parser.name);
 			System.out.println("Dimensions: " + parser.height +"x" + parser.width);
 			System.out.println(parser.boardMapping != null);
+			System.out.println(parser.boardMapping.size());
+			for(ArrayList<Tile> row: parser.boardMapping){
+				System.out.println("     "+row.size());
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

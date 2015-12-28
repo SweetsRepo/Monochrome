@@ -1,4 +1,4 @@
-package engine;
+package engine.tile;
 
 /**
  * Class outline for GreyTiles
@@ -7,6 +7,9 @@ package engine;
  */
 public class GreyTile extends Tile{
 
+	public GreyTile(){
+		super();
+	}
 	public GreyTile(int res){
 		super(res);
 	}

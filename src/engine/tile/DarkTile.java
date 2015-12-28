@@ -1,4 +1,4 @@
-package engine;
+package engine.tile;
 
 /**
  * Class outline for DarkTiles
@@ -7,8 +7,11 @@ package engine;
  */
 public class DarkTile extends Tile{
 
+	public DarkTile(){
+		super();
+	}
 	public DarkTile(int res){
 		super(res);
 	}
-
+	
 }
