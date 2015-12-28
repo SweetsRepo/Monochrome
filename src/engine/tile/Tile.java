@@ -12,6 +12,9 @@ public abstract class Tile {
 	
 	//Integer value of the resources available on this tile.
 	private int resources;
+	//Integer values representing the location of the tile on the board.
+	private int row;
+	private int column;
 	//Boolean value representing if the tile is currently occupied by an actor.
 	private boolean isOccupied;
 	//Boolean value representing if the tile in curretnly controlled by a player.
@@ -22,23 +25,15 @@ public abstract class Tile {
 	/**
 	 * Default Constructor - Makes tile with 5000 resources by default.
 	 */
-	public Tile (){
+	public Tile (int r, int c){
 		this.resources = 5000;
+		this.row = r;
+		this.column = c;
 		this.isOccupied = false;
 		this.isControlled = false;
 		this.unit = null;
 	}
 	
-	/**
-	 * Creates new tile object with the specified amount of resources
-	 * @param resources (int) - The amount of resources for the given object.
-	 */
-	public Tile(int resources){
-		this.resources = resources;
-		this.isOccupied = false;
-		this.isControlled = false;
-		this.unit = null;
-	}
 	
 	/**
 	 * Mines the resources on the tile, if there are resources available.
@@ -53,7 +48,13 @@ public abstract class Tile {
 		else
 			return false;
 	}
-	
+	/**
+	 * Returns a string representation of the coordinates
+	 * @return - Row x Column
+	 */
+	public String getCoordinates(){
+		return this.row +" x "+ this.column;
+	}
 	public void setResources(int res){
 		this.resources = res;
 	}

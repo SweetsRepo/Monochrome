@@ -7,11 +7,8 @@ package engine.tile;
  */
 public class GreyTile extends Tile{
 
-	public GreyTile(){
-		super();
-	}
-	public GreyTile(int res){
-		super(res);
+	public GreyTile(int r, int c){
+		super(r, c);
 	}
 
 }

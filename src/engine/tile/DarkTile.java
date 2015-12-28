@@ -7,11 +7,8 @@ package engine.tile;
  */
 public class DarkTile extends Tile{
 
-	public DarkTile(){
-		super();
-	}
-	public DarkTile(int res){
-		super(res);
+	public DarkTile(int r, int c){
+		super(r, c);
 	}
 	
 }

@@ -51,23 +51,23 @@ public class TileParser {
 					break;
 				case "Mapping:":
 					this.boardMapping = new ArrayList<ArrayList<Tile>>();
-					for(int r = this.height; r > 0; r--){
+					for(int r = 1; r <= this.height; r++){
 						ArrayList<Tile> row = new ArrayList<Tile>();
 						aLine = textReader.readLine();
 						if(this.width != aLine.length()){
 							//These should all be converted into parser exceptions
 							System.err.println("Row length is not uniform, please reveiw map file at line "+r);
 						}
-						for(int c = 0; c < this.width; c++){
-							switch(aLine.charAt(c)){
+						for(int c = 1; c <= this.width; c++){
+							switch(aLine.charAt(c - 1)){
 								case 'G':
-									row.add(new GreyTile());
+									row.add(new GreyTile(r, c));
 									break;
 								case 'L':
-									row.add(new LightTile());
+									row.add(new LightTile(r, c));
 									break;
 								case 'D':
-									row.add(new DarkTile());
+									row.add(new DarkTile(r, c));
 									break;
 								default:
 									System.err.println("Unexpected Character encountered, please review map file at line "+r);
@@ -92,7 +92,10 @@ public class TileParser {
 			System.out.println(parser.boardMapping != null);
 			System.out.println(parser.boardMapping.size());
 			for(ArrayList<Tile> row: parser.boardMapping){
-				System.out.println("     "+row.size());
+				//System.out.println("     "+row.size());
+				for(Tile tile: row){
+					System.out.println("     "+tile.getCoordinates());
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

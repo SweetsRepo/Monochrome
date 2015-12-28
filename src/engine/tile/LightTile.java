@@ -7,11 +7,8 @@ package engine.tile;
  */
 public class LightTile extends Tile{
 
-	public LightTile(){
-		super();
-	}
-	public LightTile(int res){
-		super(res);
+	public LightTile(int r, int c){
+		super(r, c);
 	}
 	
 }
