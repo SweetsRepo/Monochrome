@@ -1,13 +1,15 @@
 Title:
 Test Board 01
+
 Width:
 5
+
 Height:
 5
+
 Mapping:
 GGGGG
 GGGGG
 GGGGG
-GGGGG
-GGGGG
-/break/
+ggggg
+lllll

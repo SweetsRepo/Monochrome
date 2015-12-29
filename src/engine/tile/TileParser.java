@@ -37,7 +37,7 @@ public class TileParser {
 		FileReader readIn = new FileReader(this.file);
 		LineNumberReader textReader = new LineNumberReader(readIn);
 		String aLine;
-		while((aLine = textReader.readLine()) != null && !aLine.equals("/break/")){
+		while((aLine = textReader.readLine()) != null){
 			switch(aLine){
 				case "Title:":
 					//Reads the next line to get the title and sets it to the variable name
@@ -53,12 +53,14 @@ public class TileParser {
 					this.boardMapping = new ArrayList<ArrayList<Tile>>();
 					for(int r = 1; r <= this.height; r++){
 						ArrayList<Tile> row = new ArrayList<Tile>();
-						aLine = textReader.readLine();
+						//Convert all to upper case to avoid confusion in case statements below
+						aLine = textReader.readLine().toUpperCase();
 						if(this.width != aLine.length()){
 							//These should all be converted into parser exceptions
 							System.err.println("Row length is not uniform, please reveiw map file at line "+r);
 						}
 						for(int c = 1; c <= this.width; c++){
+							//c - 1 to accomodate 1 based indexing scheme
 							switch(aLine.charAt(c - 1)){
 								case 'G':
 									row.add(new GreyTile(r, c));
@@ -76,6 +78,9 @@ public class TileParser {
 						//Add new row to the 2D Array List
 						this.boardMapping.add(row);
 					}
+					break;
+				case "":
+					//If blank line, go to next line
 					break;
 				default:
 					System.err.println("Unexpected Header encountered, please review map file");
