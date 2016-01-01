@@ -65,17 +65,17 @@ public class TileParser {
 							//c - 1 to accomodate 1 based indexing scheme
 							switch(aLine.charAt(c - 1)){
 								case 'G':
-									row.add(new GreyTile(r, c));
+									row.add(new NeutralTile(r, c));
 									break;
 								case 'L':
-									row.add(new LightTile(r, c));
+									row.add(new LightSourceTile(r, c));
 									break;
 								case 'D':
-									row.add(new DarkTile(r, c));
+									row.add(new DarkSourceTile(r, c));
 									break;
 								case 'P':
 									Commander com = new Commander();
-									GreyTile starter = new GreyTile(r, c);
+									NeutralTile starter = new NeutralTile(r, c);
 									starter.setControlled(true);
 									row.add(starter);
 								default:
