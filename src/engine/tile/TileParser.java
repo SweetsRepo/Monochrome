@@ -71,6 +71,7 @@ public class TileParser {
 								case 'D':
 									row.add(new DarkTile(r, c));
 									break;
+									
 								default:
 									System.err.println("Unexpected Character encountered, please review map file at line "+r);
 							}

@@ -1,6 +1,6 @@
 package engine.tile;
 
-import engine.units.Unit;
+import game.units.Unit;
 
 /**
  * Parent class for all Tile objects. Specifies an integer for resources,
@@ -47,6 +47,25 @@ public abstract class Tile {
 		}
 		else
 			return false;
+	}
+	
+	/**
+	 * Assigns the current unit to the spot
+	 * @param curr - The unit to assign
+	 * Changes occupied to true
+	 */
+	public void setUnit(Unit curr){
+		this.unit = curr;
+		setOccupied(true);
+	}
+	
+	/**
+	 * Removes the unit currently occupying the spot.
+	 * Changes occupied to false
+	 */
+	public void removeUnit(){
+		this.unit = null;
+		setOccupied(false);
 	}
 	/**
 	 * Returns a string representation of the coordinates
