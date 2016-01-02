@@ -64,7 +64,7 @@ public class TileParser {
 						for(int c = 1; c <= this.width; c++){
 							//c - 1 to accomodate 1 based indexing scheme
 							switch(aLine.charAt(c - 1)){
-								case 'G':
+								case 'N':
 									row.add(new NeutralTile(r, c));
 									break;
 								case 'L':

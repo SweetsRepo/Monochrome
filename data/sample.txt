@@ -8,8 +8,8 @@ Height:
 5
 
 Mapping:
-GdGGG
-GGGGG
-GGsGG
-ggggg
-ggglg
+NNPNN
+NLNNN
+NNNDN
+NNNNN
+NNPNN

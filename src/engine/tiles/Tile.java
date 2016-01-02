@@ -1,5 +1,6 @@
 package engine.tiles;
 
+import game.runner.Player;
 import game.units.Unit;
 
 /**
@@ -90,5 +91,11 @@ public abstract class Tile {
 
 	public void setControlled(boolean isControlled) {
 		this.isControlled = isControlled;
+	}
+
+
+	public int mine(Player p) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

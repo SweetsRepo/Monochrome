@@ -1,5 +1,7 @@
 package engine.tiles;
 
+import game.runner.Player;
+
 /**
  * Class outline for LightTiles
  * @author Chris
@@ -11,4 +13,10 @@ public class LightSourceTile extends Tile{
 		super(r, c);
 	}
 	
+	public int mine(Player p){
+		if(p.getType() == "Light")
+			return super.mine();
+		else
+			return 0;
+	}
 }
