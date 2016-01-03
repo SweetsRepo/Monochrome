@@ -1,5 +1,6 @@
 package engine.tiles;
 
+import engine.exceptions.MisconfiguredMapException;
 import game.units.Commander;
 
 import java.io.FileReader;
@@ -35,7 +36,7 @@ public class TileParser {
 	 * @return
 	 * @throws IOException
 	 */
-	public void parseBoard() throws IOException{
+	public void parseBoard() throws IOException, MisconfiguredMapException{
 		FileReader readIn = new FileReader(this.file);
 		LineNumberReader textReader = new LineNumberReader(readIn);
 		String aLine;
@@ -59,7 +60,7 @@ public class TileParser {
 						aLine = textReader.readLine().toUpperCase();
 						if(this.width != aLine.length()){
 							//These should all be converted into parser exceptions
-							System.err.println("Row length is not uniform, please reveiw map file at line "+r);
+							throw new MisconfiguredMapException("Map file improperly configured at line " + textReader.getLineNumber());
 						}
 						for(int c = 1; c <= this.width; c++){
 							//c - 1 to accomodate 1 based indexing scheme
@@ -73,13 +74,21 @@ public class TileParser {
 								case 'D':
 									row.add(new DarkSourceTile(r, c));
 									break;
-								case 'P':
-									Commander com = new Commander();
-									NeutralTile starter = new NeutralTile(r, c);
-									starter.setControlled(true);
-									row.add(starter);
+								case 'O':
+									row.add(new OpenSourceTile(r, c));
+									break;
+								case '1':
+									Commander player1 = new Commander();
+									NeutralTile start1 = new NeutralTile(r, c);
+									row.add(start1);
+									break;
+								case '2':
+									Commander player2 = new Commander();
+									NeutralTile start2 = new NeutralTile(r, c);
+									row.add(start2);
+									break;
 								default:
-									System.err.println("Unexpected Character encountered, please review map file at line "+r);
+									throw new MisconfiguredMapException("Unexpected Character encountered, please review map file at line "+ textReader.getLineNumber());
 							}
 						}
 						//Add new row to the 2D Array List
@@ -101,16 +110,12 @@ public class TileParser {
 			parser.parseBoard();
 			System.out.println("Title: "+ parser.name);
 			System.out.println("Dimensions: " + parser.height +"x" + parser.width);
-			System.out.println(parser.boardMapping != null);
-			System.out.println(parser.boardMapping.size());
 			for(ArrayList<Tile> row: parser.boardMapping){
-				//System.out.println("     "+row.size());
 				for(Tile tile: row){
 					System.out.println("     "+tile.getCoordinates());
 				}
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException | MisconfiguredMapException e) {
 			e.printStackTrace();
 		}
 	}

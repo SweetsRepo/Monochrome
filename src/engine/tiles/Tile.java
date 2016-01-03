@@ -13,15 +13,13 @@ public abstract class Tile {
 	
 	//Integer value of the resources available on this tile.
 	private int resources;
-	//Integer values representing the location of the tile on the board.
-	private int row;
-	private int column;
+	//Integer values representing the location of the tile on the board. Final values upon set
+	private final int row;
+	private final int column;
 	//Boolean value representing if the tile is currently occupied by an actor.
-	private boolean isOccupied;
-	//Boolean value representing if the tile in curretnly controlled by a player.
-	private boolean isControlled;
+	protected boolean isOccupied;
 	//Unit currently occupying the object. Set to null if isOccupied = false.
-	private Unit unit;
+	protected Unit unit;
 	
 	/**
 	 * Default Constructor - Makes tile with 5000 resources by default.
@@ -31,7 +29,6 @@ public abstract class Tile {
 		this.row = r;
 		this.column = c;
 		this.isOccupied = false;
-		this.isControlled = false;
 		this.unit = null;
 	}
 	
@@ -83,19 +80,12 @@ public abstract class Tile {
 		return this.resources;
 	}
 
-
-	public boolean isControlled() {
-		return isControlled;
+	public boolean isOccupied() {
+		return isOccupied;
 	}
 
 
-	public void setControlled(boolean isControlled) {
-		this.isControlled = isControlled;
-	}
-
-
-	public int mine(Player p) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setOccupied(boolean isOccupied) {
+		this.isOccupied = isOccupied;
 	}
 }
