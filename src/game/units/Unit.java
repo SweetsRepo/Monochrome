@@ -16,15 +16,19 @@ public abstract class Unit {
 	//private int strength;
 	//private int weakness;
 	//private int updateStatus;
+	private boolean canMine;
+	private boolean canBuild;
 	
 	/**
 	 * When making a new unit must state its HP, number of steps allowed to take, damage, and range
 	 */
-	public Unit(int unitHp, int unitMoves, int damage, int range) {
+	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build) {
 		hp = unitHp;
 		moves = unitMoves;
 		attDamage = damage;
 		attRange = range;
+		canMine = mine;
+		canBuild = build;
 	}
 	
 	public void setHp(int hitpoints){
@@ -42,7 +46,7 @@ public abstract class Unit {
 		moves = numberOfMoves;
 	}
 	
-	//public int getmovesRemining
+	//public int getmovesRemining()
 	
 	public void setAttDamage(int unitDamage){
 		attDamage = unitDamage;
@@ -85,6 +89,7 @@ public abstract class Unit {
 			this.setAttRange(0);
 		}
 	}
+	
 		
 
 }
