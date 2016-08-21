@@ -2,8 +2,17 @@ package engine.tiles;
 
 public class BlockTile extends Tile {
 	
-	public BlockTile(int r, int c) {
-		super(r, c);
+	public BlockTile() {
+		super();
 		this.isOccupied = true;
 	}
+	
+	/**
+	 * Doesn't allow for the tile to ever be occupied
+	 */
+	@Override
+	public void setOccupied(){
+		this.isOccupied = true;
+	}
+	
 }

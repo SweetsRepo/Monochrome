@@ -9,27 +9,28 @@ import game.units.Unit;
  * @author Chris
  * @version 0.1
  */
+
+
+
 public abstract class Tile {
 	
 	//Integer value of the resources available on this tile.
 	private int resources;
-	//Integer values representing the location of the tile on the board. Final values upon set
-	private final int row;
-	private final int column;
 	//Boolean value representing if the tile is currently occupied by an actor.
 	protected boolean isOccupied;
 	//Unit currently occupying the object. Set to null if isOccupied = false.
 	protected Unit unit;
+	//Enum to indicate who controls the tile. 
+	protected Controller owner;
 	
 	/**
-	 * Default Constructor - Makes tile with 5000 resources by default.
+	 * Default Constructor - Makes tile with no resources by default.
 	 */
-	public Tile (int r, int c){
-		this.resources = 5000;
-		this.row = r;
-		this.column = c;
+	public Tile (){
+		this.resources = 0;
 		this.isOccupied = false;
 		this.unit = null;
+		this.owner = Controller.Neutral;
 	}
 	
 	
@@ -39,12 +40,18 @@ public abstract class Tile {
 	 * @return boolean - Resources available
 	 */
 	public int mine(){
-		if(this.resources != 0){
+		if(this.resources == 0){
+			return 0;
+		}
+		else if(this.resources < 100){
+			int remainder = this.resources;
+			this.resources = 0;
+			return remainder;
+		}
+		else{
 			this.resources -= 100;
 			return 100;
 		}
-		else
-			return 0;
 	}
 	
 	/**
@@ -65,13 +72,15 @@ public abstract class Tile {
 		this.unit = null;
 		this.isOccupied = false;
 	}
+	
 	/**
-	 * Returns a string representation of the coordinates
-	 * @return - Row x Column
+	 * Access the unit on the given tile for it's attributes
+	 * @return
 	 */
-	public String getCoordinates(){
-		return this.row +" x "+ this.column;
+	public Unit getUnit(){
+		return this.unit;
 	}
+	
 	public void setResources(int res){
 		this.resources = res;
 	}
@@ -85,7 +94,12 @@ public abstract class Tile {
 	}
 
 
-	public void setOccupied(boolean isOccupied) {
-		this.isOccupied = isOccupied;
+	public Controller getOwner() {
+		return owner;
+	}
+
+
+	public void setOwner(Controller owner) {
+		this.owner = owner;
 	}
 }

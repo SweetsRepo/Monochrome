@@ -3,34 +3,24 @@ package engine.tiles;
 import game.runner.Player;
 
 /**
- * Class outline for LightTiles
+ * Tile which may only be mined by Light type units
  * @author Chris
  *
  */
 public class LightSourceTile extends Tile{
-
-	//Boolean value representing if the tile in curretnly controlled by a player. Used for Mining tiles
-	protected boolean isControlled;
 		
-	public LightSourceTile(int r, int c){
-		super(r, c);
+	public LightSourceTile(){
+		super();
 	}
 	
 	/**
 	 * Mines the tile with the added check for player type
 	 */
-	public int mine(Player p){
-		if(p.getType() == "Light")
+	public int mine(){
+		if(this.unit != null && this.unit.getOwner() == Controller.Light)
 			return super.mine();
 		else
 			return 0;
 	}
 
-	public boolean isControlled() {
-		return isControlled;
-	}
-
-	public void setControlled(boolean isControlled) {
-		this.isControlled = isControlled;
-	}
 }

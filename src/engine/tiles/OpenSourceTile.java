@@ -6,20 +6,21 @@ package engine.tiles;
  *
  */
 public class OpenSourceTile extends Tile {
-
-	//Boolean value representing if the tile in curretnly controlled by a player. Used for Mining tiles
-	protected boolean isControlled;
 		
-	public OpenSourceTile(int r, int c) {
-		super(r, c);
-		// TODO Auto-generated constructor stub
+	public OpenSourceTile() {
+		super();
+		
+	}
+	
+	/**
+	 * Mines the tile with the added check for player type
+	 */
+	public int mine(){
+		if(this.unit != null)
+			return super.mine();
+		else
+			return 0;
 	}
 
-	public boolean isControlled() {
-		return isControlled;
-	}
 
-	public void setControlled(boolean isControlled) {
-		this.isControlled = isControlled;
-	}
 }

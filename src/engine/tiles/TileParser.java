@@ -23,8 +23,8 @@ public class TileParser {
 	private int height;
 	//Width of the board, given in tiles;
 	private int width;
-	//Board mapping given, Stored as a nested set of ArrayLists
-	private ArrayList<ArrayList<Tile>> boardMapping;
+	
+	public Board Board;
 	
 	public TileParser(String path){
 		this.file = path;
@@ -53,7 +53,7 @@ public class TileParser {
 					this.height = Integer.parseInt((aLine = textReader.readLine()));
 					break;
 				case "Mapping:":
-					this.boardMapping = new ArrayList<ArrayList<Tile>>();
+					this.Board = Board.getInstance();
 					for(int r = 1; r <= this.height; r++){
 						ArrayList<Tile> row = new ArrayList<Tile>();
 						//Convert all to upper case to avoid confusion in case statements below
@@ -63,28 +63,25 @@ public class TileParser {
 							throw new MisconfiguredMapException("Map file improperly configured at line " + textReader.getLineNumber());
 						}
 						for(int c = 1; c <= this.width; c++){
-							//c - 1 to accomodate 1 based indexing scheme
+							//c - 1 to accommodate 1 based indexing scheme
 							switch(aLine.charAt(c - 1)){
 								case 'N':
-									row.add(new NeutralTile(r, c));
+									row.add(new OpenSourceTile());
 									break;
 								case 'L':
-									row.add(new LightSourceTile(r, c));
+									row.add(new LightSourceTile());
 									break;
 								case 'D':
-									row.add(new DarkSourceTile(r, c));
-									break;
-								case 'O':
-									row.add(new OpenSourceTile(r, c));
+									row.add(new DarkSourceTile());
 									break;
 								case '1':
 									Commander player1 = new Commander();
-									NeutralTile start1 = new NeutralTile(r, c);
+									OpenSourceTile start1 = new OpenSourceTile();
 									row.add(start1);
 									break;
 								case '2':
 									Commander player2 = new Commander();
-									NeutralTile start2 = new NeutralTile(r, c);
+									OpenSourceTile start2 = new OpenSourceTile();
 									row.add(start2);
 									break;
 								default:
@@ -92,7 +89,7 @@ public class TileParser {
 							}
 						}
 						//Add new row to the 2D Array List
-						this.boardMapping.add(row);
+						Board.Tiles.add(row);
 					}
 					break;
 				case "":
@@ -104,15 +101,27 @@ public class TileParser {
 		}
 		textReader.close();
 	}
+	
+	/**
+	 * Parses the board and returns it. Single Board instance per game
+	 * @return - Board, dependent on input file
+	 * @throws IOException - 
+	 * @throws MisconfiguredMapException - Returns number of line which was not properly setup
+	 */
+	public Board getBoard() throws IOException, MisconfiguredMapException{
+		this.parseBoard();
+		return this.Board;
+	}
+	
 	public static void main(String[] args){
 		TileParser parser = new TileParser( "./data/sample.txt");
 		try {
 			parser.parseBoard();
 			System.out.println("Title: "+ parser.name);
 			System.out.println("Dimensions: " + parser.height +"x" + parser.width);
-			for(ArrayList<Tile> row: parser.boardMapping){
+			for(ArrayList<Tile> row: parser.Board.Tiles){
 				for(Tile tile: row){
-					System.out.println("     "+tile.getCoordinates());
+					System.out.println("     "+tile.getOwner());
 				}
 			}
 		} catch (IOException | MisconfiguredMapException e) {
