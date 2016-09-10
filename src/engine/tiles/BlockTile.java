@@ -11,7 +11,7 @@ public class BlockTile extends Tile {
 	 * Doesn't allow for the tile to ever be occupied
 	 */
 	@Override
-	public void setOccupied(){
+	public void setOccupied(boolean occupied){
 		this.isOccupied = true;
 	}
 	

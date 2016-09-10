@@ -9,7 +9,6 @@ public class OpenSourceTile extends Tile {
 		
 	public OpenSourceTile() {
 		super();
-		
 	}
 	
 	/**

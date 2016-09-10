@@ -92,7 +92,10 @@ public abstract class Tile {
 	public boolean isOccupied() {
 		return isOccupied;
 	}
-
+	
+	public void setOccupied(boolean occupied){
+		this.isOccupied = occupied;
+	}
 
 	public Controller getOwner() {
 		return owner;
