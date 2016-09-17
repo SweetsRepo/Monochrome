@@ -1,7 +1,7 @@
 package engine.tiles;
 
 import engine.exceptions.MisconfiguredMapException;
-import game.units.Commander;
+import engine.units.Commander;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class TileParser {
 	//Width of the board, given in tiles;
 	private int width;
 	
-	public Board Board;
+	private Board Board;
 	
 	public TileParser(String path){
 		this.file = path;
@@ -54,7 +54,7 @@ public class TileParser {
 					break;
 				case "Mapping:":
 					this.Board = Board.getInstance();
-					for(int r = 1; r <= this.height; r++){
+					for(int r = 0; r < this.height; r++){
 						ArrayList<Tile> row = new ArrayList<Tile>();
 						//Convert all to upper case to avoid confusion in case statements below
 						aLine = textReader.readLine().toUpperCase();
@@ -62,9 +62,9 @@ public class TileParser {
 							//These should all be converted into parser exceptions
 							throw new MisconfiguredMapException("Map file improperly configured at line " + textReader.getLineNumber());
 						}
-						for(int c = 1; c <= this.width; c++){
+						for(int c = 0; c < this.width; c++){
 							//c - 1 to accommodate 1 based indexing scheme
-							switch(aLine.charAt(c - 1)){
+							switch(aLine.charAt(c)){
 								case 'N':
 									row.add(new OpenSourceTile());
 									break;
@@ -77,11 +77,13 @@ public class TileParser {
 								case '1':
 									Commander player1 = new Commander();
 									OpenSourceTile start1 = new OpenSourceTile();
+									start1.setUnit(player1);
 									row.add(start1);
 									break;
 								case '2':
 									Commander player2 = new Commander();
 									OpenSourceTile start2 = new OpenSourceTile();
+									start2.setUnit(player2);
 									row.add(start2);
 									break;
 								default:
@@ -103,7 +105,7 @@ public class TileParser {
 	}
 	
 	/**
-	 * Parses the board and returns it. Single Board instance per game
+	 * Parses the board and returns it. Single Board instance per game - only called once
 	 * @return - Board, dependent on input file
 	 * @throws IOException - 
 	 * @throws MisconfiguredMapException - Returns number of line which was not properly setup
@@ -113,6 +115,7 @@ public class TileParser {
 		return this.Board;
 	}
 	
+	//Tester
 	public static void main(String[] args){
 		TileParser parser = new TileParser( "./data/sample.txt");
 		try {
@@ -121,8 +124,9 @@ public class TileParser {
 			System.out.println("Dimensions: " + parser.height +"x" + parser.width);
 			for(ArrayList<Tile> row: parser.Board.Tiles){
 				for(Tile tile: row){
-					System.out.println("     "+tile.getOwner());
+					System.out.print("     "+tile.getOwner());
 				}
+				System.out.println("");
 			}
 		} catch (IOException | MisconfiguredMapException e) {
 			e.printStackTrace();

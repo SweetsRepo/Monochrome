@@ -1,9 +1,11 @@
 package engine.tiles;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import game.units.Commander;
+import engine.exceptions.MisconfiguredMapException;
+import engine.units.Commander;
 
 public class Board {
 
@@ -13,7 +15,7 @@ public class Board {
 	protected ArrayList<ArrayList<Tile>> Tiles;
 	
 	//List of the moves available from a given tile. Defined recursively each time a new tile is selected.
-	private ArrayList<Tile> movesAvailable;
+	private ArrayList<Tile> tilesAvailable;
 
 	
 	/**
@@ -21,25 +23,78 @@ public class Board {
 	 */
 	private Board(){
 		this.Tiles = new ArrayList<ArrayList<Tile>>();
-		this.movesAvailable = new ArrayList<Tile>();
+		this.tilesAvailable = new ArrayList<Tile>();
 	}
 	
 	/**
-	 * Clear previous available moves result and then call Recursive DFS to find all moves from the given tile
+	 * Clear previous available tiles result and then call Recursive DFS to find all the attacks from a given tile
+	 * @param r - row index
+	 * @param c - column index
+	 * @return - List of all the tiles to attack
+	 */
+	public ArrayList<Tile> findAvailableAttacks(int r, int c){
+		ArrayList<Tile> attackTiles;
+		this.tilesAvailable.clear();
+		if(this.Tiles.get(r).get(c).isOccupied){
+			//Treat the tile that the unit is on as unoccupied, as we want moving to the same tile to be a valid movement
+			this.Tiles.get(r).get(c).setOccupied(false);
+			attackTiles = availableAttacksDFS(r, c, this.Tiles.get(r).get(c).getUnit().getAttRange());
+			this.Tiles.get(r).get(c).setOccupied(true);
+			return attackTiles;
+		}
+		else{
+			return new ArrayList<Tile>();
+		}	
+	}
+	
+	/**
+	 * Performs a recursive depth first search to find what tiles are occupied within attacking range
+	 * @param r - row index
+	 * @param c - column index
+	 * @param depth - remaining depth to search
+	 * @return - List of all the tiles to attack
+	 */
+	public ArrayList<Tile> availableAttacksDFS(int r, int c, int depth){
+		//If there's a unit on the tile and it hasn't been found already, add it to the list
+		if(this.Tiles.get(r).get(c).isOccupied && !this.tilesAvailable.contains(this.Tiles.get(r).get(c)))
+			this.tilesAvailable.add(this.Tiles.get(r).get(c));
+		//Make sure the recursive depth hasn't been reached
+		if(depth == 0){
+			//End recursive depth
+		}
+		else{
+			if(r - 1 >= 0)
+				availableAttacksDFS(r - 1, c, depth - 1);
+			if(c - 1 >= 0)
+				availableAttacksDFS(r, c - 1, depth - 1);
+			if(r + 1 <= this.Tiles.size() - 1)
+				availableAttacksDFS(r + 1, c, depth - 1);
+			if(c + 1 <= this.Tiles.get(r).size() - 1)
+				availableAttacksDFS(r, c + 1, depth - 1);
+			return this.tilesAvailable;
+		}
+		
+		return this.tilesAvailable;
+	}
+	
+	/**
+	 * Clear previous available tiles result and then call Recursive DFS to find all moves from the given tile
 	 * @param r - row index
 	 * @param c - column index
 	 * @param depth - remaining depth to search
 	 * @return - List of all the available tiles to move to
 	 */
 	public ArrayList<Tile> findAvailableMoves(int r, int c){
-		this.movesAvailable.clear();
+		ArrayList<Tile> moveTiles;
+		this.tilesAvailable.clear();
 		if(this.Tiles.get(r).get(c).isOccupied){
 			//Treat the tile that the unit is on as unoccupied, as we want moving to the same tile to be a valid movement
 			this.Tiles.get(r).get(c).setOccupied(false);
-			return availableMovesDFS(r, c, this.Tiles.get(r).get(c).getUnit().getRange());
+			moveTiles = availableMovesDFS(r, c, this.Tiles.get(r).get(c).getUnit().getRange());
+			return moveTiles;
 		}
 		else{
-			return availableMovesDFS(r, c, 0);
+			return new ArrayList<Tile>();
 		}	
 	}
 	
@@ -53,19 +108,17 @@ public class Board {
 	public ArrayList<Tile> availableMovesDFS(int r, int c, int depth){
 		//Make sure that the recursive depth hasn't been reached
 		if(depth == 0){
-			if(!this.movesAvailable.contains(this.Tiles.get(r).get(c)) && !(this.Tiles.get(r).get(c).isOccupied))
-				this.movesAvailable.add(this.Tiles.get(r).get(c));
+			if(!this.tilesAvailable.contains(this.Tiles.get(r).get(c)) && !(this.Tiles.get(r).get(c).isOccupied))
+				this.tilesAvailable.add(this.Tiles.get(r).get(c));
 			//End of recursive depth
-		}
-		//Make sure that we don't have any duplicate tiles
-		else if(this.movesAvailable.contains(this.Tiles.get(r).get(c))){
-			//End of path due to obstacle
 		}
 		//Add the tile to available moves and recurse to the next set
 		else{
 			//Make sure to truncate any paths which are blocked by occupied tiles
 			if(!this.Tiles.get(r).get(c).isOccupied){
-				this.movesAvailable.add(this.Tiles.get(r).get(c));
+				//Don't allow for any duplicate tiles
+				if(!this.tilesAvailable.contains(this.Tiles.get(r).get(c)))
+					this.tilesAvailable.add(this.Tiles.get(r).get(c));
 				if(r - 1 >= 0)
 					availableMovesDFS(r - 1, c, depth - 1);
 				if(c - 1 >= 0)
@@ -74,27 +127,10 @@ public class Board {
 					availableMovesDFS(r + 1, c, depth - 1);
 				if(c + 1 <= this.Tiles.get(r).size() - 1)
 					availableMovesDFS(r, c + 1, depth - 1);
-				return this.movesAvailable;
+				return this.tilesAvailable;
 			}
 		}
-		//Make the Java Compiler happy, this is unreachable
-		return this.movesAvailable;
-	}
-	
-	/**
-	 * Accesses the Tile at the given Row and Column Coordinate
-	 * @param r - Row index
-	 * @param c - Column index
-	 * @return - Tile in the given position
-	 */
-	public Tile accessTile(int r, int c){
-		try{
-			return Tiles.get(r).get(c);
-		}
-		catch (IndexOutOfBoundsException e){
-			System.err.println("That shouldn't have been accessed");
-			return null;
-		}
+		return this.tilesAvailable;
 	}
 	
 	/**
@@ -112,36 +148,24 @@ public class Board {
 	
 	public static void main(String[] args){
 		
-		//Test Singleton implementation
-		Board test = Board.getInstance();
-		int hashcode = test.hashCode();
-		Board test2 = Board.getInstance();
-		int hashcode2 = test2.hashCode();
-		System.out.println(hashcode == hashcode2);
+		//Parse the input file to get a Board
+		TileParser parser = new TileParser( "./data/sample.txt");
+		Board board = null;
+		try {
+			board = parser.getBoard();
+		} catch (IOException | MisconfiguredMapException e) {
+			e.printStackTrace();
+		}
 		
-		//Set the Board Tiles Manually
-		ArrayList<Tile> row0 = new ArrayList<Tile>();
-		ArrayList<Tile> row1 = new ArrayList<Tile>();
-		ArrayList<Tile> row2 = new ArrayList<Tile>();
-		ArrayList<Tile> row3 = new ArrayList<Tile>();
-		row0.addAll(Arrays.asList(new OpenSourceTile(), new OpenSourceTile(), new OpenSourceTile()));
-		row1.addAll(Arrays.asList(new OpenSourceTile(), new OpenSourceTile(), new OpenSourceTile()));
-		row2.addAll(Arrays.asList(new OpenSourceTile(), new OpenSourceTile(), new OpenSourceTile()));
-		row2.get(2).setUnit(new Commander());
-		row2.get(1).setOccupied(true);
-		row3.addAll(Arrays.asList(new OpenSourceTile(), new OpenSourceTile(), new OpenSourceTile()));
-		test2.Tiles.addAll(Arrays.asList(row0, row1, row2, row3));
-		
+		System.out.println(board.Tiles.get(4).get(2).isOccupied);
 		//Test Recursive DFS Depth finder
-		System.out.println(test2.findAvailableMoves(2, 2).size());
-		for(Tile t: test2.movesAvailable){
-			for(int i = 0; i < test2.Tiles.size(); i++){
-				if(test2.Tiles.get(i).contains(t)){
-					System.out.println(i + "," + test2.Tiles.get(i).indexOf(t));
+		System.out.println(board.findAvailableMoves(4, 2).size());
+		for(Tile t: board.tilesAvailable){
+			for(int i = 0; i < board.Tiles.size(); i++){
+				if(board.Tiles.get(i).contains(t)){
+					System.out.println(i + "," + board.Tiles.get(i).indexOf(t));
 				}
 			}
 		}
-		
-		
 	}
 }

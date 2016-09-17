@@ -1,4 +1,4 @@
-package game.buildings;
+package engine.buildings;
 
 public class Research {
 

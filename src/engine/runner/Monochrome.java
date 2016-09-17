@@ -1,4 +1,4 @@
-package game.runner;
+package engine.runner;
 /**
  * Class which will actually start the game instance.
  * @author Chris

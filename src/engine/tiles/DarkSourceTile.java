@@ -1,6 +1,6 @@
 package engine.tiles;
 
-import game.runner.Player;
+import engine.runner.Player;
 
 /**
  * Tile which may only be mined by Dark Type Units

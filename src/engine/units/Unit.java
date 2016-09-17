@@ -1,4 +1,4 @@
-package game.units;
+package engine.units;
 
 import engine.tiles.Controller;
 
@@ -10,7 +10,7 @@ import engine.tiles.Controller;
  */
 public abstract class Unit {
 	private int hp;
-	private int range;
+	private int moveRange;
 	//private int movesRemaining;
 	//private int researchTree;
 	private int attDamage;
@@ -27,7 +27,7 @@ public abstract class Unit {
 	 */
 	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build, Controller cont) {
 		this.hp = unitHp;
-		this.range = unitMoves;
+		this.moveRange = unitMoves;
 		this.attDamage = damage;
 		this.attRange = range;
 		this.canMine = mine;
@@ -47,11 +47,11 @@ public abstract class Unit {
 	  * This is the number of steps a unit is allowed to move in one turn (upgradable to increase?)
 	  */ 
 	public void setRange(int numberOfMoves){
-		this.range = numberOfMoves;
+		this.moveRange = numberOfMoves;
 	}
 	
 	public int getRange(){
-		return this.range;
+		return this.moveRange;
 	}
 	
 	public void setAttDamage(int unitDamage){

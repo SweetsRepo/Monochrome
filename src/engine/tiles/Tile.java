@@ -1,7 +1,7 @@
 package engine.tiles;
 
-import game.runner.Player;
-import game.units.Unit;
+import engine.runner.Player;
+import engine.units.Unit;
 
 /**
  * Parent class for all Tile objects. Specifies an integer for resources,
