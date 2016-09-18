@@ -6,8 +6,8 @@ import engine.units.Unit;
 /**
  * Parent class for all Tile objects. Specifies an integer for resources,
  * boolean for occupation state, and default method implementation.
- * @author Chris
- * @version 0.1
+ * @author Christopher Sweet - crs4263@rit.edu
+ * @version 0.9
  */
 
 
@@ -21,7 +21,7 @@ public abstract class Tile {
 	//Unit currently occupying the object. Set to null if isOccupied = false.
 	protected Unit unit;
 	//Enum to indicate who controls the tile. 
-	protected Controller owner;
+	protected Owner owner;
 	
 	/**
 	 * Default Constructor - Makes tile with no resources by default.
@@ -30,7 +30,7 @@ public abstract class Tile {
 		this.resources = 0;
 		this.isOccupied = false;
 		this.unit = null;
-		this.owner = Controller.Neutral;
+		this.owner = Owner.Neutral;
 	}
 	
 	
@@ -97,12 +97,12 @@ public abstract class Tile {
 		this.isOccupied = occupied;
 	}
 
-	public Controller getOwner() {
+	public Owner getOwner() {
 		return owner;
 	}
 
 
-	public void setOwner(Controller owner) {
+	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
 }

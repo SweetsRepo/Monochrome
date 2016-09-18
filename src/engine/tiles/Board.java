@@ -3,10 +3,17 @@ package engine.tiles;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 
 import engine.exceptions.MisconfiguredMapException;
 import engine.units.Commander;
 
+/**
+ * Implements the singular board which will contain most data members for the game. Additionally algorithms
+ * for accessing the information found in the given Board instance. Singleton Pattern
+ * @author Christopher Sweet - crs4263@rit.edu
+ * @version 0.9
+ */
 public class Board {
 
 	protected static Board instance; 
@@ -14,9 +21,11 @@ public class Board {
 	//Tiles representing the board
 	protected ArrayList<ArrayList<Tile>> Tiles;
 	
-	//List of the moves available from a given tile. Defined recursively each time a new tile is selected.
+	//List of the tile available for a chosen action
 	private ArrayList<Tile> tilesAvailable;
 
+	//Dictionary representing Tiles controlled by each player - References will only be kept for Light and Dark, not Neutral
+	private Hashtable<Owner, ArrayList<Tile>> tilesByPlayer;
 	
 	/**
 	 * Singleton Implementation of the board
@@ -24,6 +33,20 @@ public class Board {
 	private Board(){
 		this.Tiles = new ArrayList<ArrayList<Tile>>();
 		this.tilesAvailable = new ArrayList<Tile>();
+		this.tilesByPlayer = new Hashtable<Owner, ArrayList<Tile>>();
+	}
+	
+	/**
+	 * Singleton Pattern for board
+	 * @return Board Object
+	 */
+	public static Board getInstance(){
+		if( instance == null){
+			instance = new Board();
+			return instance;
+		}
+		else
+			return instance;
 	}
 	
 	/**
@@ -32,7 +55,7 @@ public class Board {
 	 * @param c - column index
 	 * @return - List of all the tiles to attack
 	 */
-	public ArrayList<Tile> findAvailableAttacks(int r, int c){
+	public synchronized ArrayList<Tile> findAvailableAttacks(int r, int c){
 		ArrayList<Tile> attackTiles;
 		this.tilesAvailable.clear();
 		if(this.Tiles.get(r).get(c).isOccupied){
@@ -54,7 +77,7 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the tiles to attack
 	 */
-	public ArrayList<Tile> availableAttacksDFS(int r, int c, int depth){
+	private ArrayList<Tile> availableAttacksDFS(int r, int c, int depth){
 		//If there's a unit on the tile and it hasn't been found already, add it to the list
 		if(this.Tiles.get(r).get(c).isOccupied && !this.tilesAvailable.contains(this.Tiles.get(r).get(c)))
 			this.tilesAvailable.add(this.Tiles.get(r).get(c));
@@ -71,9 +94,10 @@ public class Board {
 				availableAttacksDFS(r + 1, c, depth - 1);
 			if(c + 1 <= this.Tiles.get(r).size() - 1)
 				availableAttacksDFS(r, c + 1, depth - 1);
+			//All paths exhausted return the result
 			return this.tilesAvailable;
 		}
-		
+		//Terminate end of path results
 		return this.tilesAvailable;
 	}
 	
@@ -84,7 +108,7 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the available tiles to move to
 	 */
-	public ArrayList<Tile> findAvailableMoves(int r, int c){
+	public synchronized ArrayList<Tile> findAvailableMoves(int r, int c){
 		ArrayList<Tile> moveTiles;
 		this.tilesAvailable.clear();
 		if(this.Tiles.get(r).get(c).isOccupied){
@@ -105,7 +129,7 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the available tiles to move to
 	 */
-	public ArrayList<Tile> availableMovesDFS(int r, int c, int depth){
+	private ArrayList<Tile> availableMovesDFS(int r, int c, int depth){
 		//Make sure that the recursive depth hasn't been reached
 		if(depth == 0){
 			if(!this.tilesAvailable.contains(this.Tiles.get(r).get(c)) && !(this.Tiles.get(r).get(c).isOccupied))
@@ -127,29 +151,43 @@ public class Board {
 					availableMovesDFS(r + 1, c, depth - 1);
 				if(c + 1 <= this.Tiles.get(r).size() - 1)
 					availableMovesDFS(r, c + 1, depth - 1);
+				//All paths exhausted, return the result
 				return this.tilesAvailable;
 			}
 		}
-		return this.tilesAvailable;
+		//Terminate end of depth runs.
+		return null;
 	}
 	
+	//INCOMPLETE
 	/**
-	 * Singleton Pattern for board
-	 * @return Board Object
+	 * Takes the tile and places it under control of the given unit. 
+	 * @param r - row index
+	 * @param c - column index
 	 */
-	public static Board getInstance(){
-		if( instance == null){
-			instance = new Board();
-			return instance;
+	public void takeTile(int r, int c){
+		//insert control logic to count turns here
+		if(this.Tiles.get(r).get(c).isOccupied){
+			//If neutral tile add to the player whos unit is currently on it
+			if(this.Tiles.get(r).get(c).owner == Owner.Neutral){
+				this.tilesByPlayer.get(this.Tiles.get(r).get(c).owner).add(this.Tiles.get(r).get(c));
+			}
+			else{
+				//Remove the tile from the other players control, and add it to the calling player
+				this.tilesByPlayer.get(Owner.getOpposite(this.Tiles.get(r).get(c).owner)).remove(this.Tiles.get(r).get(c));
+				this.tilesByPlayer.get(this.Tiles.get(r).get(c).owner).add(this.Tiles.get(r).get(c));
+			}
 		}
-		else
-			return instance;
+		//Do nothing case
+		else{
+			return;
+		}
 	}
 	
 	public static void main(String[] args){
 		
 		//Parse the input file to get a Board
-		TileParser parser = new TileParser( "./data/sample.txt");
+		BoardParser parser = new BoardParser( "./data/sample.txt");
 		Board board = null;
 		try {
 			board = parser.getBoard();
@@ -157,9 +195,22 @@ public class Board {
 			e.printStackTrace();
 		}
 		
-		System.out.println(board.Tiles.get(4).get(2).isOccupied);
-		//Test Recursive DFS Depth finder
+		//Test Recursive DFS Move finder
 		System.out.println(board.findAvailableMoves(4, 2).size());
+		for(Tile t: board.tilesAvailable){
+			for(int i = 0; i < board.Tiles.size(); i++){
+				if(board.Tiles.get(i).contains(t)){
+					System.out.println(i + "," + board.Tiles.get(i).indexOf(t));
+				}
+			}
+		}
+		System.out.println("");
+		//Pretend that the unit in question did not move between turns. 
+		//This is why we should really have a unit tester.
+		board.Tiles.get(4).get(2).setOccupied(true);
+		
+		//Test Recursive DFS Attack finder
+		System.out.println(board.findAvailableAttacks(4, 2).size());
 		for(Tile t: board.tilesAvailable){
 			for(int i = 0; i < board.Tiles.size(); i++){
 				if(board.Tiles.get(i).contains(t)){

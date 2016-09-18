@@ -1,13 +1,23 @@
 package engine.runner;
 /**
- * Class which will actually start the game instance.
- * @author Chris
+ * Class which will actually start the game instance. Main Thread
+ * @author Christopher Sweet - crs4263@rit.edu
  *
  */
-public class Monochrome {
+public class Monochrome implements Runnable{
 
 	public Monochrome() {
-		// TODO Auto-generated constructor stub
+		
+	}
+
+	/**
+	 * Run method must create additional threads for the players, parse and create the board,
+	 * and instantiate all related data structures for the game.
+	 */
+	@Override
+	public void run() {
+		
+		
 	}
 
 }

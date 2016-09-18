@@ -4,8 +4,8 @@ import engine.runner.Player;
 
 /**
  * Tile which may only be mined by Dark Type Units
- * @author Chris
- *
+ * @author Christopher Sweet
+ * @version 0.5
  */
 public class DarkSourceTile extends Tile{
 	
@@ -17,7 +17,7 @@ public class DarkSourceTile extends Tile{
 	 * Mines the tile with the added check for player type
 	 */
 	public int mine(){
-		if(this.unit != null && this.unit.getOwner() == Controller.Dark)
+		if(this.unit != null && this.unit.getOwner() == Owner.Dark)
 			return super.mine();
 		else
 			return 0;

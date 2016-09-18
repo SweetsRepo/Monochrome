@@ -1,5 +1,10 @@
 package engine.tiles;
 
+/**
+ * Tile which is permanently blocked
+ * @author Christopher Sweet
+ * @version 0.5
+ */
 public class BlockTile extends Tile {
 	
 	public BlockTile() {

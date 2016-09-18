@@ -7,28 +7,14 @@ import java.util.ArrayList;
 
 /**
  * Class outline for player objects
- * @author Chris
- *
+ * @author Christopher Sweet - crs4263@rit.edu
+ * @version 0.5
  */
-public class Player {
-	//Arraylist for all the units under this player's control. Arraylist for all the tiles under the player's control
-	private ArrayList<Unit> units;
-	private ArrayList<Tile> tiles;
-	//String for Player Type
-	private String type;
-	//Integers for resources
+public abstract class Player implements Runnable {
+	
+	//Container for the amount of resources a player has
 	private int resources;
 	
-	public Player() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
+	//Container for the special resources the given player has
+	private int specialResources;
 }

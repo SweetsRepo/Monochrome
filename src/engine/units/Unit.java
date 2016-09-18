@@ -1,6 +1,6 @@
 package engine.units;
 
-import engine.tiles.Controller;
+import engine.tiles.Owner;
 
 /**
  * Parent class for all Units, such as turrets, infintry, tanks, etc.
@@ -20,12 +20,12 @@ public abstract class Unit {
 	//private int updateStatus;
 	private boolean canMine;
 	private boolean canBuild;
-	private Controller owner;
+	private Owner owner;
 	
 	/**
 	 * When making a new unit must state its HP, number of steps allowed to take, damage, and range
 	 */
-	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build, Controller cont) {
+	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build, Owner cont) {
 		this.hp = unitHp;
 		this.moveRange = unitMoves;
 		this.attDamage = damage;
@@ -82,11 +82,11 @@ public abstract class Unit {
 		
 	}
 	
-	public Controller getOwner() {
+	public Owner getOwner() {
 		return this.owner;
 	}
 
-	public void setOwner(Controller owner) {
+	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
 

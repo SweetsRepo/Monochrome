@@ -10,10 +10,11 @@ import java.util.ArrayList;
 
 /**
  * Parser which will take in tile mapping files and generate a map given the specifications within it. 
- * @author Chris
- * @version 0.1
+ * Since the board is a singleton, it is expected that this will only be called at the start of a game
+ * @author Christopher Sweet - crs4263@rit.edu
+ * @version 1.0
  */
-public class TileParser {
+public class BoardParser {
 	
 	//String of the filepath neccessary for reading data from
 	private String file;
@@ -24,9 +25,9 @@ public class TileParser {
 	//Width of the board, given in tiles;
 	private int width;
 	
-	private Board Board;
+	private Board gameBoard;
 	
-	public TileParser(String path){
+	public BoardParser(String path){
 		this.file = path;
 	}
 	
@@ -53,7 +54,8 @@ public class TileParser {
 					this.height = Integer.parseInt((aLine = textReader.readLine()));
 					break;
 				case "Mapping:":
-					this.Board = Board.getInstance();
+					//Get an instance of the board. Should only be called once, when initializing the game
+					this.gameBoard = Board.getInstance();
 					for(int r = 0; r < this.height; r++){
 						ArrayList<Tile> row = new ArrayList<Tile>();
 						//Convert all to upper case to avoid confusion in case statements below
@@ -91,7 +93,7 @@ public class TileParser {
 							}
 						}
 						//Add new row to the 2D Array List
-						Board.Tiles.add(row);
+						gameBoard.Tiles.add(row);
 					}
 					break;
 				case "":
@@ -112,17 +114,17 @@ public class TileParser {
 	 */
 	public Board getBoard() throws IOException, MisconfiguredMapException{
 		this.parseBoard();
-		return this.Board;
+		return this.gameBoard;
 	}
 	
 	//Tester
 	public static void main(String[] args){
-		TileParser parser = new TileParser( "./data/sample.txt");
+		BoardParser parser = new BoardParser( "./data/sample.txt");
 		try {
 			parser.parseBoard();
 			System.out.println("Title: "+ parser.name);
 			System.out.println("Dimensions: " + parser.height +"x" + parser.width);
-			for(ArrayList<Tile> row: parser.Board.Tiles){
+			for(ArrayList<Tile> row: parser.gameBoard.Tiles){
 				for(Tile tile: row){
 					System.out.print("     "+tile.getOwner());
 				}
