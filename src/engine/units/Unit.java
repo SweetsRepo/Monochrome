@@ -4,20 +4,15 @@ import engine.tiles.Owner;
 
 /**
  * Parent class for all Units, such as turrets, infintry, tanks, etc.
- * @author Chris
  * @author Daljit
- * @version 0.1
+ * @coauthor Christopher Sweet - crs4263@rit.edu
+ * @version 0.5
  */
 public abstract class Unit {
 	private int hp;
 	private int moveRange;
-	//private int movesRemaining;
-	//private int researchTree;
 	private int attDamage;
 	private int attRange;
-	//private int strength;
-	//private int weakness;
-	//private int updateStatus;
 	private boolean canMine;
 	private boolean canBuild;
 	private Owner owner;

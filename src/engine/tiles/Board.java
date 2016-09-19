@@ -165,7 +165,7 @@ public class Board {
 	 * @param r - row index
 	 * @param c - column index
 	 */
-	public void takeTile(int r, int c){
+	public synchronized void takeTile(int r, int c){
 		//insert control logic to count turns here
 		if(this.Tiles.get(r).get(c).isOccupied){
 			//If neutral tile add to the player whos unit is currently on it
