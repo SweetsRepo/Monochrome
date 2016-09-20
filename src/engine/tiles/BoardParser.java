@@ -93,7 +93,7 @@ public class BoardParser {
 							}
 						}
 						//Add new row to the 2D Array List
-						gameBoard.Tiles.add(row);
+						gameBoard.tiles.add(row);
 					}
 					break;
 				case "":
@@ -124,7 +124,7 @@ public class BoardParser {
 			parser.parseBoard();
 			System.out.println("Title: "+ parser.name);
 			System.out.println("Dimensions: " + parser.height +"x" + parser.width);
-			for(ArrayList<Tile> row: parser.gameBoard.Tiles){
+			for(ArrayList<Tile> row: parser.gameBoard.tiles){
 				for(Tile tile: row){
 					System.out.print("     "+tile.getOwner());
 				}
