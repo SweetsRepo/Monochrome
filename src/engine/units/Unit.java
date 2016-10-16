@@ -9,6 +9,7 @@ import engine.tiles.Owner;
  * @version 0.5
  */
 public abstract class Unit {
+	
 	private int hp;
 	private int moveRange;
 	private int attDamage;
@@ -91,8 +92,7 @@ public abstract class Unit {
 	public void damageDealt(int damage){
 		int unitHp = this.getHp();
 		this.setHp(unitHp - damage);
-		boolean isAlive = isAlive();
-		if (isAlive = false){
+		if (isAlive()){
 		//Need to replace with what to do when a unit dies
 			this.setAttDamage(0);
 			this.setAttRange(0);

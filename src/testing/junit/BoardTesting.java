@@ -34,7 +34,7 @@ public class BoardTesting extends TestCase {
 	 */
 	@Test
 	public void testMoveDFS(){
-		assertEquals(23, this.board.findAvailableMoves(4, 2).size());
+		assertEquals(18, this.board.findAvailableMoves(4, 2).size());
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class BoardTesting extends TestCase {
 	 */
 	@Test
 	public void testAttackDFS(){
-		assertEquals(1, this.board.findAvailableAttacks(4, 2).size());
+		assertEquals(4, this.board.findAvailableAttacks(4, 2).size());
 	}
 	
 }

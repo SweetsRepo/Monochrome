@@ -94,6 +94,14 @@ public class Board {
 				availableAttacksDFS(r + 1, c, depth - 1);
 			if(c + 1 <= this.tiles.get(r).size() - 1)
 				availableAttacksDFS(r, c + 1, depth - 1);
+			if(r - 1 >= 0 && c - 1 >= 0)
+				availableAttacksDFS(r - 1, c - 1, depth - 1);
+			if(r + 1 <= this.tiles.size() && c - 1 >= 0)
+				availableAttacksDFS(r + 1, c - 1, depth - 1);
+			if(r - 1 >= 0 && c + 1 <= this.tiles.get(r).size())
+				availableAttacksDFS(r - 1, c + 1, depth - 1);
+			if(r + 1 <= this.tiles.size() && c + 1 <= this.tiles.get(r).size())
+				availableAttacksDFS(r + 1, c + 1, depth - 1);
 			//All paths exhausted return the result
 			return this.tilesAvailable;
 		}
