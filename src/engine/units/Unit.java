@@ -21,14 +21,13 @@ public abstract class Unit {
 	/**
 	 * When making a new unit must state its HP, number of steps allowed to take, damage, and range
 	 */
-	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build, Owner cont) {
+	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build) {
 		this.hp = unitHp;
 		this.moveRange = unitMoves;
 		this.attDamage = damage;
 		this.attRange = range;
 		this.canMine = mine;
 		this.canBuild = build;
-		this.owner = cont;
 	}
 	
 	public void setHp(int hitpoints){
