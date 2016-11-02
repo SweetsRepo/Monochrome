@@ -7,6 +7,10 @@ package engine.runner;
  */
 public class LightPlayer extends Player {
 
+	public LightPlayer(int pid) {
+		super(pid);
+	}
+
 	@Override
 	public void run() {
 		

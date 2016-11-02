@@ -18,14 +18,31 @@ public abstract class Player implements Runnable {
 	//Container for the special resources the given player has
 	private int specialResources;
 	
-	private ArrayList<Unit> units;
+	protected ArrayList<Unit> units;
+	
+	//Integer representing the player ID
+	public int pid;
 	
 	/**
 	 * Default Constructor for both player type objects
 	 */
-	public Player(){
+	public Player(int pid){
 		this.units = new ArrayList<Unit>();
 		this.resources = 500;
 		this.specialResources = 0;
+		this.pid = pid;
 	}
+
+	
+	public ArrayList<Unit> getUnits() {
+		return units;
+	}
+
+	public void setUnits(ArrayList<Unit> units) {
+		this.units = units;
+	}
+	
+	public void addUnit(Unit unit){
+		this.units.add(unit);
+	}	
 }

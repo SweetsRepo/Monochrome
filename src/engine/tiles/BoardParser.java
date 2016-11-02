@@ -1,6 +1,9 @@
 package engine.tiles;
 
 import engine.exceptions.MisconfiguredMapException;
+import engine.runner.DarkPlayer;
+import engine.runner.LightPlayer;
+import engine.runner.Player;
 import engine.units.Commander;
 
 import java.io.FileReader;
@@ -37,7 +40,7 @@ public class BoardParser {
 	 * @return
 	 * @throws IOException
 	 */
-	public void parseBoard() throws IOException, MisconfiguredMapException{
+	public Board parseBoard() throws IOException, MisconfiguredMapException{
 		FileReader readIn = new FileReader(this.file);
 		LineNumberReader textReader = new LineNumberReader(readIn);
 		String aLine;
@@ -77,16 +80,30 @@ public class BoardParser {
 									row.add(new DarkSourceTile());
 									break;
 								case '1':
+									//Create Commander and set start location
 									Commander player1 = new Commander();
 									OpenSourceTile start1 = new OpenSourceTile();
 									start1.setUnit(player1);
 									row.add(start1);
+									
+									//Create player object and start the thread
+									Player p1 = new LightPlayer(1);
+									Thread player1Thread = new Thread(p1);
+									player1Thread.start();
+									p1.addUnit(player1);
 									break;
 								case '2':
+									//Create Commander and set start location
 									Commander player2 = new Commander();
 									OpenSourceTile start2 = new OpenSourceTile();
 									start2.setUnit(player2);
 									row.add(start2);
+									
+									//Create player object and start the thread
+									Player p2 = new DarkPlayer(2);
+									Thread player2Thread = new Thread(p2);
+									player2Thread.start();
+									p2.addUnit(player2);
 									break;
 								default:
 									throw new MisconfiguredMapException("Unexpected Character encountered, please review map file at line "+ textReader.getLineNumber());
@@ -104,6 +121,7 @@ public class BoardParser {
 			}	
 		}
 		textReader.close();
+		return gameBoard;
 	}
 	
 	/**
@@ -113,8 +131,7 @@ public class BoardParser {
 	 * @throws MisconfiguredMapException - Returns number of line which was not properly setup
 	 */
 	public Board getBoard() throws IOException, MisconfiguredMapException{
-		this.parseBoard();
-		return this.gameBoard;
+		return this.parseBoard();
 	}
 	
 	//Tester

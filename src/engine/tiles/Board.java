@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.TreeSet;
 
 import engine.exceptions.MisconfiguredMapException;
 import engine.units.Commander;
@@ -27,6 +28,12 @@ public class Board {
 	//Dictionary representing Tiles controlled by each player - References will only be kept for Light and Dark, not Neutral
 	private Hashtable<Owner, ArrayList<Tile>> tilesByPlayer;
 	
+	//Player ID representing the player who currently has access to the board
+	public int pid; 
+	
+	//Set of players to ensure that no duplicates are created upon parse
+	private TreeSet<Runnable> players;
+	
 	/**
 	 * Singleton Implementation of the board
 	 */
@@ -34,6 +41,8 @@ public class Board {
 		this.tiles = new ArrayList<ArrayList<Tile>>();
 		this.tilesAvailable = new ArrayList<Tile>();
 		this.tilesByPlayer = new Hashtable<Owner, ArrayList<Tile>>();
+		this.players = new TreeSet<Runnable>();
+		this.pid = 1;
 	}
 	
 	/**
@@ -214,5 +223,9 @@ public class Board {
 
 	public void setTiles(ArrayList<ArrayList<Tile>> tiles) {
 		this.tiles = tiles;
+	}
+	
+	public Runnable[] getPlayers(){
+		return (Runnable[])this.players.toArray();
 	}
 }

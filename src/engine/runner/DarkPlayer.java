@@ -7,6 +7,10 @@ package engine.runner;
  */
 public class DarkPlayer extends Player {
 
+	public DarkPlayer(int pid) {
+		super(pid);
+	}
+
 	@Override
 	public void run() {
 		

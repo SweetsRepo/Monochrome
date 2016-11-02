@@ -7,7 +7,7 @@ import engine.units.*;
  * @author Christopher Sweet - crs4263@rit.edu
  * @version 0.1
  */
-public class Barracks {
+public class Barracks extends FactoryPattern{
 
 	/**
 	 * Enumeration of all the units and their production cost
@@ -72,18 +72,5 @@ public class Barracks {
 		}
 		//Unit could not be produced
 		return null;
-	}
-	
-	/**
-	 * Checks the cost of the unit requested compared to the players resources
-	 * @param resourcesAvail - Players resources
-	 * @param unit - Enumeration of unit costs
-	 * @return - True:Unit may be produced. False:Unit may not be produced
-	 */
-	private boolean checkCost(int resourcesAvail, UnitCosts unit){
-		if(resourcesAvail >= unit.getCost())
-			return true;
-		else
-			return false;
 	}
 }
