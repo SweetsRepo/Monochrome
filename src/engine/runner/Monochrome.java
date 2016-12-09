@@ -45,7 +45,7 @@ public class Monochrome implements Runnable{
 		} catch (IOException | MisconfiguredMapException e) {
 			e.printStackTrace();
 		}
-		
+		scan.close();
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class Monochrome implements Runnable{
 	 */
 	public void swapTurn(){
 		if(this.gameBoard.pid == NUMPLAYERS)
-			this.gameBoard.pid = 1;
+			this.gameBoard.pid = 0;
 		else
 			this.gameBoard.pid++;
 		for(int i = 0; i < players.length; i++){
@@ -73,6 +73,26 @@ public class Monochrome implements Runnable{
 			}
 			
 		}
+	}
+
+	public Board getGameBoard() {
+		return gameBoard;
+	}
+
+	public void setGameBoard(Board gameBoard) {
+		this.gameBoard = gameBoard;
+	}
+
+	public Runnable[] getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(Runnable[] players) {
+		this.players = players;
+	}
+	
+	public Runnable getActivePlayer(){
+		return this.players[this.gameBoard.pid];
 	}
 
 }

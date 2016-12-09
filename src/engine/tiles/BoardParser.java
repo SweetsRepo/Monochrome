@@ -87,10 +87,11 @@ public class BoardParser {
 									row.add(start1);
 									
 									//Create player object and start the thread
-									Player p1 = new LightPlayer(1);
+									Player p1 = new LightPlayer(0);
 									Thread player1Thread = new Thread(p1);
 									player1Thread.start();
 									p1.addUnit(player1);
+									gameBoard.addPlayer(p1);
 									break;
 								case '2':
 									//Create Commander and set start location
@@ -100,10 +101,11 @@ public class BoardParser {
 									row.add(start2);
 									
 									//Create player object and start the thread
-									Player p2 = new DarkPlayer(2);
+									Player p2 = new DarkPlayer(1);
 									Thread player2Thread = new Thread(p2);
 									player2Thread.start();
 									p2.addUnit(player2);
+									gameBoard.addPlayer(p2);
 									break;
 								default:
 									throw new MisconfiguredMapException("Unexpected Character encountered, please review map file at line "+ textReader.getLineNumber());
@@ -121,6 +123,10 @@ public class BoardParser {
 			}	
 		}
 		textReader.close();
+		//Create reference to the gameboard in each of the players
+		for(Player p: this.gameBoard.getPlayers()){
+			p.setBoard(gameBoard);
+		}
 		return gameBoard;
 	}
 	

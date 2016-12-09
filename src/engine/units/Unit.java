@@ -16,7 +16,6 @@ public abstract class Unit {
 	private int attRange;
 	private boolean canMine;
 	private boolean canBuild;
-	private Owner owner;
 	
 	/**
 	 * When making a new unit must state its HP, number of steps allowed to take, damage, and range
@@ -75,14 +74,6 @@ public abstract class Unit {
 		}
 		else return false;
 		
-	}
-	
-	public Owner getOwner() {
-		return this.owner;
-	}
-
-	public void setOwner(Owner owner) {
-		this.owner = owner;
 	}
 
 	/**

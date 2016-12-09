@@ -1,6 +1,7 @@
 package engine.runner;
 
 import engine.tiles.Tile;
+import engine.tiles.Board;
 import engine.units.Unit;
 
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ public abstract class Player implements Runnable {
 	//Integer representing the player ID
 	public int pid;
 	
+	//Reference to the central gameboard. Passed in during creation of
+	//the player object.
+	public Board board;
+	
 	/**
 	 * Default Constructor for both player type objects
 	 */
@@ -34,6 +39,7 @@ public abstract class Player implements Runnable {
 	}
 
 	
+	
 	public ArrayList<Unit> getUnits() {
 		return units;
 	}
@@ -44,5 +50,15 @@ public abstract class Player implements Runnable {
 	
 	public void addUnit(Unit unit){
 		this.units.add(unit);
+	}
+
+
+	public Board getBoard() {
+		return board;
+	}
+
+
+	public void setBoard(Board board) {
+		this.board = board;
 	}	
 }

@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.TreeSet;
 
 import engine.exceptions.MisconfiguredMapException;
+import engine.runner.Player;
 import engine.units.Commander;
 
 /**
@@ -32,7 +33,7 @@ public class Board {
 	public int pid; 
 	
 	//Set of players to ensure that no duplicates are created upon parse
-	private TreeSet<Runnable> players;
+	private TreeSet<Player> players;
 	
 	/**
 	 * Singleton Implementation of the board
@@ -41,7 +42,7 @@ public class Board {
 		this.tiles = new ArrayList<ArrayList<Tile>>();
 		this.tilesAvailable = new ArrayList<Tile>();
 		this.tilesByPlayer = new Hashtable<Owner, ArrayList<Tile>>();
-		this.players = new TreeSet<Runnable>();
+		this.players = new TreeSet<Player>();
 		this.pid = 1;
 	}
 	
@@ -225,7 +226,11 @@ public class Board {
 		this.tiles = tiles;
 	}
 	
-	public Runnable[] getPlayers(){
-		return (Runnable[])this.players.toArray();
+	public void addPlayer(Player p){
+		this.players.add(p);
+	}
+	
+	public Player[] getPlayers(){
+		return (Player[])(this.players.toArray());
 	}
 }
