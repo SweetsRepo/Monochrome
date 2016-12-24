@@ -5,10 +5,10 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import engine.board.Board;
+import engine.board.BoardParser;
+import engine.board.Tile;
 import engine.exceptions.MisconfiguredMapException;
-import engine.tiles.Board;
-import engine.tiles.BoardParser;
-import engine.tiles.Tile;
 import junit.framework.TestCase;
 
 public class BoardTesting extends TestCase {

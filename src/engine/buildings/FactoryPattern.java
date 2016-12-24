@@ -1,7 +1,7 @@
 package engine.buildings;
 
+import engine.board.Owner;
 import engine.buildings.Barracks.UnitCosts;
-import engine.tiles.Owner;
 
 public abstract class FactoryPattern {
 	

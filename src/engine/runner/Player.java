@@ -1,7 +1,7 @@
 package engine.runner;
 
-import engine.tiles.Tile;
-import engine.tiles.Board;
+import engine.board.Board;
+import engine.board.Tile;
 import engine.units.Unit;
 
 import java.util.ArrayList;

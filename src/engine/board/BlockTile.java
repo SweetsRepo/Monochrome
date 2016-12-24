@@ -1,4 +1,4 @@
-package engine.tiles;
+package engine.board;
 
 /**
  * Tile which is permanently blocked

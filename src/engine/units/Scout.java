@@ -1,6 +1,6 @@
 package engine.units;
 
-import engine.tiles.Owner;
+import engine.board.Owner;
 
 public class Scout extends Unit {
 

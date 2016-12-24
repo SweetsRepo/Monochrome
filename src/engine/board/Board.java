@@ -1,4 +1,4 @@
-package engine.tiles;
+package engine.board;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import engine.exceptions.MisconfiguredMapException;
 import engine.runner.Player;
 import engine.units.Commander;
+import engine.units.Unit;
 
 /**
  * Implements the singular board which will contain most data members for the game. Additionally algorithms
@@ -201,6 +202,43 @@ public class Board {
 			return;
 		}
 	}
+	
+	/**
+	 * Moves the unit found at tile[sr, sc] and moves it to tile[er, ec]
+	 * @param sr - start row
+	 * @param sc - start column
+	 * @param er - end row
+	 * @param ec - end column
+	 */
+	public synchronized void moveUnit(int sr, int sc, int er, int ec){
+		Unit unitRef = this.tiles.get(sr).get(sc).getUnit();
+		this.tiles.get(sr).get(sc).setOccupied(false);
+		this.tiles.get(sr).get(sc).setUnit(null);
+		this.tiles.get(er).get(ec).setUnit(unitRef);
+		this.tiles.get(er).get(ec).setOccupied(true);
+	}
+	
+	/**
+	 * Attacks the unit at tile[er, ec] with unit at tile[sr, sc]
+	 * If the unit is killed the attacker moves up to the new tile
+	 * @param sr - start row
+	 * @param sc - start column 
+	 * @param er - end row
+	 * @param ec - end column
+	 */
+	public synchronized void attackUnit(int sr, int sc, int er, int ec){
+		Unit underAttack = this.tiles.get(er).get(ec).getUnit();
+		Unit dealingAttack = this.tiles.get(sr).get(sc).getUnit();
+		//DamageDealt method returns a boolean indicating if the unit under attack is still alive post attack
+		if(underAttack.damageDealt(dealingAttack.getAttDamage())){
+			this.tiles.get(er).get(ec).setOccupied(false);
+			this.tiles.get(er).get(ec).setUnit(null);
+			//NOTE: Create a reference from the unit to it's controlling player
+			//Remove the unit from the player's unit list
+			this.moveUnit(sr, sc, er, ec);
+		}
+	}
+	
 	
 	public ArrayList<Tile> getTilesAvailable() {
 		return tilesAvailable;

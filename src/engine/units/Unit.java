@@ -1,6 +1,6 @@
 package engine.units;
 
-import engine.tiles.Owner;
+import engine.board.Owner;
 
 /**
  * Parent class for all Units, such as turrets, infintry, tanks, etc.
@@ -79,14 +79,10 @@ public abstract class Unit {
 	/**
 	  * Whenever damage is done, resets HP and checks to see if the unit is alive
 	  */
-	public void damageDealt(int damage){
+	public boolean damageDealt(int damage){
 		int unitHp = this.getHp();
 		this.setHp(unitHp - damage);
-		if (isAlive()){
-		//Need to replace with what to do when a unit dies
-			this.setAttDamage(0);
-			this.setAttRange(0);
-		}
+		return isAlive();
 	}
 	
 		

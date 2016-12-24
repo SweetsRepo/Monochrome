@@ -1,4 +1,4 @@
-package engine.tiles;
+package engine.board;
 
 /**
  * Controller Enumeration to indicate who controls tiles, units, etc.

@@ -1,4 +1,4 @@
-package engine.tiles;
+package engine.board;
 
 import engine.runner.Player;
 

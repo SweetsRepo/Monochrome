@@ -1,4 +1,4 @@
-package engine.tiles;
+package engine.board;
 
 /**
  * Class outline for Tiles which may be mined by either player

@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import engine.board.*;
 import engine.exceptions.MisconfiguredMapException;
-import engine.tiles.*;
+import engine.units.Unit;
+import engine.units.Worker;
 
 /**
  * Class which will actually start the game instance. Main Thread
@@ -18,7 +20,7 @@ public class Monochrome implements Runnable{
 	protected Board gameBoard;
 
 	//ArrayList of all the player threads.
-	protected Runnable[] players;
+	protected Player[] players;
 	
 	//Number of players, currently capped at 2
 	public static final int NUMPLAYERS = 2;
@@ -74,6 +76,72 @@ public class Monochrome implements Runnable{
 			
 		}
 	}
+	
+	//INCOMPLETE: Need Build method and UI handling
+	/**
+	 * Serves as the sender upon a board tile click. 
+	 * Provides a list of possible operations dependent upon the tile attributes
+	 * @param r - row index
+	 * @param c - column index
+	 */
+	public void boardTileClick(int r, int c){
+		//ArrayList of the possible player options when clicking on this tile
+		ArrayList<String> options = new ArrayList<String>();
+		//Build the options list
+		options.add("Cancel");
+		//If the tile is occupied move and attack are valid options iff the unit belongs to the active player.
+		if(this.gameBoard.getTiles().get(r).get(c).isOccupied()){
+			if(this.getActivePlayer().getUnits().contains(this.gameBoard.getTiles().get(r).get(c).getUnit())){
+				options.add("Move");
+				options.add("Attack");
+				if(this.gameBoard.getTiles().get(r).get(c).getUnit() instanceof Worker){
+					options.add("Build");
+				}
+			}
+		}
+		//Allow the user to select their option - Update the UI
+		System.out.print("Options for this tile: ");
+		for(String opt : options){
+			System.out.println(opt);
+		}
+		//Allow for user click in the UI
+		Scanner scan = new Scanner(System.in);
+		String choice = "";
+		while(!options.contains(choice)){
+			choice = scan.nextLine();
+		}
+		//Tiles which are available for the selected action
+		ArrayList<Tile> availableTiles;
+		int row;
+		int col;
+		switch(choice){
+			case "Cancel":
+				return;
+			case "Move":
+				availableTiles = this.gameBoard.findAvailableMoves(r, c);
+				//Highlight the available tiles and let the user select one
+				System.out.println("Enter the row and column index of the tile you would like to select");
+				row = scan.nextInt();
+				col = scan.nextInt();
+				//Check to make sure the selected tile is a valid tile
+				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
+					this.gameBoard.moveUnit(r, c, row, col);
+				break;
+			case "Attack":
+				availableTiles = this.gameBoard.findAvailableAttacks(r, c);
+				//Highlight the available tiles and let the user select one
+				System.out.println("Enter the row and column index of the tile you would like to select");
+				row = scan.nextInt();
+				col = scan.nextInt();
+				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
+					this.gameBoard.attackUnit(r, c, row, col);
+				break;
+			case "Build":
+				//call build
+				break;
+		}
+		
+	}
 
 	public Board getGameBoard() {
 		return gameBoard;
@@ -87,11 +155,11 @@ public class Monochrome implements Runnable{
 		return players;
 	}
 
-	public void setPlayers(Runnable[] players) {
+	public void setPlayers(Player[] players) {
 		this.players = players;
 	}
 	
-	public Runnable getActivePlayer(){
+	public Player getActivePlayer(){
 		return this.players[this.gameBoard.pid];
 	}
 
