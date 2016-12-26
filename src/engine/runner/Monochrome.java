@@ -116,6 +116,7 @@ public class Monochrome implements Runnable{
 		int col;
 		switch(choice){
 			case "Cancel":
+				scan.close();
 				return;
 			case "Move":
 				availableTiles = this.gameBoard.findAvailableMoves(r, c);
@@ -140,7 +141,7 @@ public class Monochrome implements Runnable{
 				//call build
 				break;
 		}
-		
+		scan.close();
 	}
 
 	public Board getGameBoard() {
