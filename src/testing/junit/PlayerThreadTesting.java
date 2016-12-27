@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import engine.runner.GameSettings;
 import engine.runner.Monochrome;
 import engine.runner.Player;
 
@@ -32,7 +33,7 @@ public class PlayerThreadTesting extends TestCase {
 		//Ensure that the active player make changes
 		int activePlayer = this.testGame.getGameBoard().pid;
 		//Loop through the players and try to make moves
-		for(int i = 0; i < Monochrome.NUMPLAYERS; i++){
+		for(int i = 0; i < GameSettings.NUMPLAYERS; i++){
 			Player p = this.testGame.getGameBoard().getPlayers()[i];
 		}
 	}

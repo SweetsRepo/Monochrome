@@ -1,5 +1,11 @@
 package engine.exceptions;
 
+/**
+ * MisconfiguredMapException: Thrown when the map file created by the user does not meet the
+ * requirements of the engine.
+ * @author Christopher Sweet - crs4262@rit.edu
+ * @version 0.1
+ */
 public class MisconfiguredMapException extends Exception{
 
 	/**

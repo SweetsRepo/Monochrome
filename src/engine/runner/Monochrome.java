@@ -22,9 +22,6 @@ public class Monochrome implements Runnable{
 	//ArrayList of all the player threads.
 	protected Player[] players;
 	
-	//Number of players, currently capped at 2
-	public static final int NUMPLAYERS = 2;
-	
 	public Monochrome() {
 		
 	}
@@ -57,7 +54,7 @@ public class Monochrome implements Runnable{
 	 * @return: null
 	 */
 	public void swapTurn(){
-		if(this.gameBoard.pid == NUMPLAYERS)
+		if(this.gameBoard.pid == GameSettings.NUMPLAYERS)
 			this.gameBoard.pid = 0;
 		else
 			this.gameBoard.pid++;
@@ -94,6 +91,7 @@ public class Monochrome implements Runnable{
 			if(this.getActivePlayer().getUnits().contains(this.gameBoard.getTiles().get(r).get(c).getUnit())){
 				options.add("Move");
 				options.add("Attack");
+				options.add("Claim");
 				if(this.gameBoard.getTiles().get(r).get(c).getUnit() instanceof Worker){
 					options.add("Build");
 				}
@@ -107,6 +105,7 @@ public class Monochrome implements Runnable{
 		//Allow for user click in the UI
 		Scanner scan = new Scanner(System.in);
 		String choice = "";
+		System.out.println("Echo one of the options above");
 		while(!options.contains(choice)){
 			choice = scan.nextLine();
 		}
@@ -137,8 +136,20 @@ public class Monochrome implements Runnable{
 				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
 					this.gameBoard.attackUnit(r, c, row, col);
 				break;
+			case "Claim":
+				//If the tile is controlled by the enemy removes it from their control.
+				//If the tile is neutral, it is added to the players control
+				this.gameBoard.takeTile(r, c);
 			case "Build":
-				//call build
+				availableTiles = this.gameBoard.findAvailableBuilds(r, c);
+				//Highlight the available tiles and let the user select one
+				System.out.println("Enter the row and column index of the tile you would like to select");
+				row = scan.nextInt();
+				col = scan.nextInt();
+				System.out.println("Enter the name of the unit type you would like to build");
+				choice = scan.nextLine();
+				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
+					this.gameBoard.buildOnTile(row, col, choice);
 				break;
 		}
 		scan.close();

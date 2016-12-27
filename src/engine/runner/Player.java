@@ -18,7 +18,7 @@ public abstract class Player implements Runnable {
 	
 	//Container for the special resources the given player has
 	private int specialResources;
-	
+
 	protected ArrayList<Unit> units;
 	
 	//Integer representing the player ID
@@ -61,4 +61,19 @@ public abstract class Player implements Runnable {
 	public void setBoard(Board board) {
 		this.board = board;
 	}	
+	public int getResources() {
+		return resources;
+	}
+
+	public void setResources(int resources) {
+		this.resources = resources;
+	}
+
+	public int getSpecialResources() {
+		return specialResources;
+	}
+
+	public void setSpecialResources(int specialResources) {
+		this.specialResources = specialResources;
+	}
 }

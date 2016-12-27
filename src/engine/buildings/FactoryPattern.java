@@ -1,8 +1,5 @@
 package engine.buildings;
 
-import engine.board.Owner;
-import engine.buildings.Barracks.UnitCosts;
-
 public interface FactoryPattern {
 	
 	/**

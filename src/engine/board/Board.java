@@ -6,16 +6,18 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.TreeSet;
 
+import engine.buildings.Building;
 import engine.exceptions.MisconfiguredMapException;
 import engine.runner.Player;
 import engine.units.Commander;
 import engine.units.Unit;
+import engine.units.Worker;
 
 /**
  * Implements the singular board which will contain most data members for the game. Additionally algorithms
  * for accessing the information found in the given Board instance. Singleton Pattern
  * @author Christopher Sweet - crs4263@rit.edu
- * @version 0.9
+ * @version 1.0.1
  */
 public class Board {
 
@@ -178,7 +180,70 @@ public class Board {
 		return null;
 	}
 	
-	//INCOMPLETE
+	/**
+	 * Clear previous available tiles result and then call Recursive DFS to find all build options from a given tile
+	 * @param r - row index
+	 * @param c - column index
+	 * @param depth - remaining depth to search
+	 * @return - List of all the available build options
+	 */
+	public synchronized ArrayList<Tile> findAvailableBuilds(int r, int c){
+		ArrayList<Tile> buildTiles;
+		this.tilesAvailable.clear();
+		if(this.tiles.get(r).get(c).isOccupied){
+			buildTiles = availableBuildDFS(r, c, this.tiles.get(r).get(c).getUnit().getRange());
+			return buildTiles;
+		}
+		else{
+			return new ArrayList<Tile>();
+		}
+	}
+	
+	/**
+	 * Performs a recursive Depth First Search to determine what tiles are non-occupied
+	 * @param r - row index
+	 * @param c - column index
+	 * @param depth - remaining depth to search
+	 * @return - List of all the available build options
+	 */
+	private ArrayList<Tile> availableBuildDFS(int r, int c, int depth){
+		//Make sure that the recursive depth hasn't been reached
+		if(depth == 0){
+			if(!this.tilesAvailable.contains(this.tiles.get(r).get(c)) && !(this.tiles.get(r).get(c).isOccupied))
+				this.tilesAvailable.add(this.tiles.get(r).get(c));
+			//End of recursive depth
+		}
+		//Add the tile to available moves and recurse to the next set
+		else{
+			//Make sure to truncate any paths which are blocked by occupied tiles
+			if(!this.tiles.get(r).get(c).isOccupied){
+				//Don't allow for any duplicate tiles
+				if(!this.tilesAvailable.contains(this.tiles.get(r).get(c)))
+					this.tilesAvailable.add(this.tiles.get(r).get(c));
+				if(r - 1 >= 0)
+					availableBuildDFS(r - 1, c, depth - 1);
+				if(c - 1 >= 0)
+					availableBuildDFS(r, c - 1, depth - 1);
+				if(r + 1 <= this.tiles.size() - 1)
+					availableBuildDFS(r + 1, c, depth - 1);
+				if(c + 1 <= this.tiles.get(r).size() - 1)
+					availableBuildDFS(r, c + 1, depth - 1);
+				if(r - 1 >= 0 && c - 1 >= 0)
+					availableBuildDFS(r - 1, c - 1, depth - 1);
+				if(r + 1 <= this.tiles.size() && c - 1 >= 0)
+					availableBuildDFS(r + 1, c - 1, depth - 1);
+				if(r - 1 >= 0 && c + 1 <= this.tiles.get(r).size())
+					availableBuildDFS(r - 1, c + 1, depth - 1);
+				if(r + 1 <= this.tiles.size() && c + 1 <= this.tiles.get(r).size())
+					availableBuildDFS(r + 1, c + 1, depth - 1);
+				//All paths exhausted, return the result
+				return this.tilesAvailable;
+			}
+		}
+		//Terminate end of depth runs.
+		return null;
+	}
+	
 	/**
 	 * Takes the tile and places it under control of the given unit. 
 	 * @param r - row index
@@ -192,9 +257,8 @@ public class Board {
 				this.tilesByPlayer.get(this.tiles.get(r).get(c).owner).add(this.tiles.get(r).get(c));
 			}
 			else{
-				//Remove the tile from the other players control, and add it to the calling player
+				//Remove the tile from the other players control
 				this.tilesByPlayer.get(Owner.getOpposite(this.tiles.get(r).get(c).owner)).remove(this.tiles.get(r).get(c));
-				this.tilesByPlayer.get(this.tiles.get(r).get(c).owner).add(this.tiles.get(r).get(c));
 			}
 		}
 		//Do nothing case
@@ -239,6 +303,17 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Builds the unit specified by the string on tile (r,c)
+	 * @param r - row index
+	 * @param c - column index
+	 * @param unit - String representation of the unit
+	 */
+	public synchronized void buildOnTile(int r, int c, String unit){
+		Building build = ((Worker)(this.tiles.get(r).get(c).getUnit())).constructBuilding(this.getPlayers()[this.pid].getResources(), unit);
+		this.tiles.get(r).get(c).setOccupied(true);
+		//There needs to be a way to set buildings here instead of just units.
+	}
 	
 	public ArrayList<Tile> getTilesAvailable() {
 		return tilesAvailable;

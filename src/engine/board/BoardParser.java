@@ -21,13 +21,17 @@ public class BoardParser {
 	
 	//String of the filepath neccessary for reading data from
 	private String file;
+	
 	//Title of the baord/map given
 	private String name;
+	
 	//Height of the board, given in tiles;
 	private int height;
+	
 	//Width of the board, given in tiles;
 	private int width;
 	
+	//Gameboard Object returned to the Monochrome Controller Class
 	private Board gameBoard;
 	
 	public BoardParser(String path){
