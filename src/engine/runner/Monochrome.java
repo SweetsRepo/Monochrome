@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import engine.board.*;
+import engine.buildings.Building;
 import engine.exceptions.MisconfiguredMapException;
 import engine.units.Unit;
 import engine.units.Worker;
@@ -74,7 +75,6 @@ public class Monochrome implements Runnable{
 		}
 	}
 	
-	//INCOMPLETE: Need Build method and UI handling
 	/**
 	 * Serves as the sender upon a board tile click. 
 	 * Provides a list of possible operations dependent upon the tile attributes
@@ -94,6 +94,10 @@ public class Monochrome implements Runnable{
 				options.add("Claim");
 				if(this.gameBoard.getTiles().get(r).get(c).getUnit() instanceof Worker){
 					options.add("Build");
+					options.add("Mine");
+				}
+				if(this.gameBoard.getTiles().get(r).get(c).getBuilding() instanceof Building){
+					options.add("Produce");
 				}
 			}
 		}
@@ -136,11 +140,18 @@ public class Monochrome implements Runnable{
 				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
 					this.gameBoard.attackUnit(r, c, row, col);
 				break;
-			case "Claim":
-				//If the tile is controlled by the enemy removes it from their control.
-				//If the tile is neutral, it is added to the players control
-				this.gameBoard.takeTile(r, c);
 			case "Build":
+				availableTiles = this.gameBoard.findAvailableBuilds(r, c);
+				//Highlight the available tiles and let the user select one
+				System.out.println("Enter the row and column index of the tile you would like to select");
+				row = scan.nextInt();
+				col = scan.nextInt();
+				System.out.println("Enter the name of the building type you would like to build");
+				choice = scan.nextLine();
+				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
+					this.gameBoard.buildOnTile(row, col, choice);
+				break;
+			case "Produce":
 				availableTiles = this.gameBoard.findAvailableBuilds(r, c);
 				//Highlight the available tiles and let the user select one
 				System.out.println("Enter the row and column index of the tile you would like to select");
@@ -149,8 +160,16 @@ public class Monochrome implements Runnable{
 				System.out.println("Enter the name of the unit type you would like to build");
 				choice = scan.nextLine();
 				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
-					this.gameBoard.buildOnTile(row, col, choice);
+					this.gameBoard.produceOnTile(row, col, choice);
 				break;
+			case "Mine":
+				//Add the resources gained from mining to the player's resources
+				this.getActivePlayer().setResources(this.getActivePlayer().getResources() + this.gameBoard.getTiles().get(r).get(c).mine());
+				break;
+			case "Claim":
+				//If the tile is controlled by the enemy removes it from their control.
+				//If the tile is neutral, it is added to the players control
+				this.gameBoard.takeTile(r, c);
 		}
 		scan.close();
 	}

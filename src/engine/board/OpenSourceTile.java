@@ -10,16 +10,4 @@ public class OpenSourceTile extends Tile {
 	public OpenSourceTile() {
 		super();
 	}
-	
-	/**
-	 * Mines the tile with the added check for player type
-	 */
-	public int mine(){
-		if(this.unit != null)
-			return super.mine();
-		else
-			return 0;
-	}
-
-
 }

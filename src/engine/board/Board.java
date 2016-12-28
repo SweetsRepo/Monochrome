@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.TreeSet;
 
+import engine.buildings.Barracks;
 import engine.buildings.Building;
 import engine.exceptions.MisconfiguredMapException;
 import engine.runner.Player;
@@ -276,10 +277,8 @@ public class Board {
 	 */
 	public synchronized void moveUnit(int sr, int sc, int er, int ec){
 		Unit unitRef = this.tiles.get(sr).get(sc).getUnit();
-		this.tiles.get(sr).get(sc).setOccupied(false);
-		this.tiles.get(sr).get(sc).setUnit(null);
+		this.tiles.get(sr).get(sc).removeUnit();
 		this.tiles.get(er).get(ec).setUnit(unitRef);
-		this.tiles.get(er).get(ec).setOccupied(true);
 	}
 	
 	/**
@@ -295,12 +294,23 @@ public class Board {
 		Unit dealingAttack = this.tiles.get(sr).get(sc).getUnit();
 		//DamageDealt method returns a boolean indicating if the unit under attack is still alive post attack
 		if(underAttack.damageDealt(dealingAttack.getAttDamage())){
-			this.tiles.get(er).get(ec).setOccupied(false);
-			this.tiles.get(er).get(ec).setUnit(null);
+			this.tiles.get(er).get(ec).removeUnit();
 			//NOTE: Create a reference from the unit to it's controlling player
 			//Remove the unit from the player's unit list
 			this.moveUnit(sr, sc, er, ec);
 		}
+	}
+	
+	/**
+	 * Builds the building specified by the string on tile (r,c)
+	 * @param r - row index
+	 * @param c - column index
+	 * @param unit - String representation of the building
+	 */
+	public synchronized void buildOnTile(int r, int c, String building){
+		Building build = ((Worker)(this.tiles.get(r).get(c).getUnit())).constructBuilding(this.getPlayers()[this.pid].getResources(), building);
+		if(build != null)
+			this.tiles.get(r).get(c).setBuilding(build);
 	}
 	
 	/**
@@ -309,10 +319,10 @@ public class Board {
 	 * @param c - column index
 	 * @param unit - String representation of the unit
 	 */
-	public synchronized void buildOnTile(int r, int c, String unit){
-		Building build = ((Worker)(this.tiles.get(r).get(c).getUnit())).constructBuilding(this.getPlayers()[this.pid].getResources(), unit);
-		this.tiles.get(r).get(c).setOccupied(true);
-		//There needs to be a way to set buildings here instead of just units.
+	public synchronized void produceOnTile(int r, int c, String unit){
+		Unit produce = ((Barracks)(this.tiles.get(r).get(c).getBuilding())).constructUnit(this.getPlayers()[this.pid].getResources(), unit);
+		if(produce != null)
+			this.tiles.get(r).get(c).setUnit(produce);
 	}
 	
 	public ArrayList<Tile> getTilesAvailable() {

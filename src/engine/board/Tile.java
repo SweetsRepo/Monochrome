@@ -1,5 +1,6 @@
 package engine.board;
 
+import engine.buildings.Building;
 import engine.runner.Player;
 import engine.units.Unit;
 
@@ -16,10 +17,16 @@ public abstract class Tile {
 	
 	//Integer value of the resources available on this tile.
 	private int resources;
+
 	//Boolean value representing if the tile is currently occupied by an actor.
 	protected boolean isOccupied;
+	
 	//Unit currently occupying the object. Set to null if isOccupied = false.
 	protected Unit unit;
+	
+	//Building currently occupying this object. Set to null if isOccupied = false
+	protected Building building;
+	
 	//Enum to indicate who controls the tile. 
 	protected Owner owner;
 	
@@ -30,6 +37,7 @@ public abstract class Tile {
 		this.resources = 0;
 		this.isOccupied = false;
 		this.unit = null;
+		this.building = null;
 		this.owner = Owner.Neutral;
 	}
 	
@@ -40,18 +48,22 @@ public abstract class Tile {
 	 * @return boolean - Resources available
 	 */
 	public int mine(){
-		if(this.resources == 0){
-			return 0;
+		if(this.unit != null){
+			if(this.resources == 0){
+				return 0;
+			}
+			else if(this.resources < 100){
+				int remainder = this.resources;
+				this.resources = 0;
+				return remainder;
+			}
+			else{
+				this.resources -= 100;
+				return 100;
+			}
 		}
-		else if(this.resources < 100){
-			int remainder = this.resources;
-			this.resources = 0;
-			return remainder;
-		}
-		else{
-			this.resources -= 100;
-			return 100;
-		}
+		//Catch-all return of 0 if no unit is present
+		return 0;
 	}
 	
 	/**
@@ -72,13 +84,32 @@ public abstract class Tile {
 		this.unit = null;
 		this.isOccupied = false;
 	}
+
+	/**
+	 * Assigns the current unit to the spot
+	 * @param curr - The unit to assign
+	 * Changes occupied to true
+	 */
+	public void setBuilding(Building curr){
+		this.building = curr;
+		this.isOccupied = true;
+	}
 	
 	/**
-	 * Access the unit on the given tile for it's attributes
-	 * @return
+	 * Removes the unit currently occupying the spot.
+	 * Changes occupied to false
 	 */
+	public void removeBuilding(){
+		this.building = null;
+		this.isOccupied = false;
+	}
+	
 	public Unit getUnit(){
 		return this.unit;
+	}
+	
+	public Building getBuilding(){
+		return this.building;
 	}
 	
 	public void setResources(int res){
