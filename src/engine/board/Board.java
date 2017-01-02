@@ -36,8 +36,8 @@ public class Board {
 	//Player ID representing the player who currently has access to the board
 	public int pid; 
 	
-	//Set of players to ensure that no duplicates are created upon parse
-	private TreeSet<Player> players;
+	//List of the players
+	private ArrayList<Player> players;
 	
 	/**
 	 * Singleton Implementation of the board
@@ -46,8 +46,8 @@ public class Board {
 		this.tiles = new ArrayList<ArrayList<Tile>>();
 		this.tilesAvailable = new ArrayList<Tile>();
 		this.tilesByPlayer = new Hashtable<Owner, ArrayList<Tile>>();
-		this.players = new TreeSet<Player>();
-		this.pid = 1;
+		this.players = new ArrayList<Player>();
+		this.pid = 0;
 	}
 	
 	/**
@@ -137,6 +137,7 @@ public class Board {
 			//Treat the tile that the unit is on as unoccupied, as we want moving to the same tile to be a valid movement
 			this.tiles.get(r).get(c).setOccupied(false);
 			moveTiles = availableMovesDFS(r, c, this.tiles.get(r).get(c).getUnit().getRange());
+			this.tiles.get(r).get(c).setOccupied(true);
 			return moveTiles;
 		}
 		else{
@@ -192,7 +193,10 @@ public class Board {
 		ArrayList<Tile> buildTiles;
 		this.tilesAvailable.clear();
 		if(this.tiles.get(r).get(c).isOccupied){
-			buildTiles = availableBuildDFS(r, c, this.tiles.get(r).get(c).getUnit().getRange());
+			//Treat the tile that the unit is on as unoccupied, as building on the same tile is allowable
+			this.tiles.get(r).get(c).setOccupied(false);
+			buildTiles = availableBuildDFS(r, c, this.tiles.get(r).get(c).getUnit().getBuildRange());
+			this.tiles.get(r).get(c).setOccupied(true);
 			return buildTiles;
 		}
 		else{
@@ -251,15 +255,15 @@ public class Board {
 	 * @param c - column index
 	 */
 	public synchronized void takeTile(int r, int c){
-		//insert control logic to count turns here
-		if(this.tiles.get(r).get(c).isOccupied){
-			//If neutral tile add to the player whos unit is currently on it
+		//Don't operate if there are no units on the tile, or the tile is already controlled by the given player
+		if(this.tiles.get(r).get(c).isOccupied || this.tiles.get(r).get(c).getOwner() == this.getPlayers()[this.pid].getFaction()){
+			//If neutral tile add to the player who's unit is currently on it
 			if(this.tiles.get(r).get(c).owner == Owner.Neutral){
-				this.tilesByPlayer.get(this.tiles.get(r).get(c).owner).add(this.tiles.get(r).get(c));
+				this.tilesByPlayer.get(this.getPlayers()[this.pid].getFaction()).add(this.tiles.get(r).get(c));
 			}
 			else{
 				//Remove the tile from the other players control
-				this.tilesByPlayer.get(Owner.getOpposite(this.tiles.get(r).get(c).owner)).remove(this.tiles.get(r).get(c));
+				this.tilesByPlayer.get(Owner.getOpposite(this.getPlayers()[this.pid].getFaction())).remove(this.tiles.get(r).get(c));
 			}
 		}
 		//Do nothing case

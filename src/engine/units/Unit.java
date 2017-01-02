@@ -12,6 +12,7 @@ public abstract class Unit {
 	
 	private int hp;
 	private int moveRange;
+	private int buildRange;
 	private int attDamage;
 	private int attRange;
 	private boolean canMine;
@@ -20,14 +21,29 @@ public abstract class Unit {
 	/**
 	 * When making a new unit must state its HP, number of steps allowed to take, damage, and range
 	 */
-	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build) {
+	public Unit(int unitHp, int unitMoves, int buildRange, int damage, int range, boolean mine, boolean build) {
 		this.hp = unitHp;
 		this.moveRange = unitMoves;
+		this.buildRange = buildRange;
 		this.attDamage = damage;
 		this.attRange = range;
 		this.canMine = mine;
 		this.canBuild = build;
 	}
+	
+	/**
+	 * Temp Constructor cause I added in buildRange and didn't want to update all subsequent classes
+	 */
+	public Unit(int unitHp, int unitMoves, int damage, int range, boolean mine, boolean build) {
+		this.hp = unitHp;
+		this.moveRange = unitMoves;
+		this.buildRange = 0;
+		this.attDamage = damage;
+		this.attRange = range;
+		this.canMine = mine;
+		this.canBuild = build;
+	}
+	
 	
 	public void setHp(int hitpoints){
 		this.hp = hitpoints;
@@ -64,10 +80,42 @@ public abstract class Unit {
 		return this.attRange;
 	}
 	
+	public int getMoveRange() {
+		return moveRange;
+	}
+
+	public void setMoveRange(int moveRange) {
+		this.moveRange = moveRange;
+	}
+
+	public boolean canMine() {
+		return canMine;
+	}
+
+	public void setCanMine(boolean canMine) {
+		this.canMine = canMine;
+	}
+
+	public boolean canBuild() {
+		return canBuild;
+	}
+
+	public void setCanBuild(boolean canBuild) {
+		this.canBuild = canBuild;
+	}
+
+	public int getBuildRange() {
+		return buildRange;
+	}
+
+	public void setBuildRange(int buildRange) {
+		this.buildRange = buildRange;
+	}
+
 	/**
 	  * States if the unit is alive or not
 	  */
-	public boolean isAlive(){
+	private boolean isAlive(){
 		int unitHp = this.getHp();
 		if (unitHp <= 0){
 			return true;

@@ -1,6 +1,7 @@
 package engine.runner;
 
 import engine.board.Board;
+import engine.board.Owner;
 import engine.board.Tile;
 import engine.units.Unit;
 
@@ -19,23 +20,24 @@ public abstract class Player implements Runnable {
 	//Container for the special resources the given player has
 	private int specialResources;
 
+	//ArrayList to contain all the units that the player has
 	protected ArrayList<Unit> units;
+	
+	//Owner identification for usage with tile operations
+	protected Owner faction;
 	
 	//Integer representing the player ID
 	public int pid;
 	
-	//Reference to the central gameboard. Passed in during creation of
-	//the player object.
-	public Board board;
-	
 	/**
 	 * Default Constructor for both player type objects
 	 */
-	public Player(int pid){
+	public Player(int pid, Owner faction){
 		this.units = new ArrayList<Unit>();
 		this.resources = 500;
 		this.specialResources = 0;
 		this.pid = pid;
+		this.faction = faction;
 	}
 
 	
@@ -52,15 +54,6 @@ public abstract class Player implements Runnable {
 		this.units.add(unit);
 	}
 
-
-	public Board getBoard() {
-		return board;
-	}
-
-
-	public void setBoard(Board board) {
-		this.board = board;
-	}	
 	public int getResources() {
 		return resources;
 	}
@@ -75,5 +68,17 @@ public abstract class Player implements Runnable {
 
 	public void setSpecialResources(int specialResources) {
 		this.specialResources = specialResources;
+	}
+
+
+
+	public Owner getFaction() {
+		return faction;
+	}
+
+
+
+	public void setFaction(Owner faction) {
+		this.faction = faction;
 	}
 }

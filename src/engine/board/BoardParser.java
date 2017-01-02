@@ -127,10 +127,6 @@ public class BoardParser {
 			}	
 		}
 		textReader.close();
-		//Create reference to the gameboard in each of the players
-		for(Player p: this.gameBoard.getPlayers()){
-			p.setBoard(gameBoard);
-		}
 		return gameBoard;
 	}
 	

@@ -1,5 +1,7 @@
 package engine.runner;
 
+import engine.board.Owner;
+
 /**
  * Class outline for Dark Player objects
  * @author Christopher Sweet - crs4263@rit.edu
@@ -8,7 +10,7 @@ package engine.runner;
 public class DarkPlayer extends Player {
 
 	public DarkPlayer(int pid) {
-		super(pid);
+		super(pid, Owner.Dark);
 	}
 
 	@Override

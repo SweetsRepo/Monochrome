@@ -10,10 +10,8 @@ import engine.runner.GameSettings;
  */
 public class Worker extends Unit implements FactoryPattern {
 
-	public int buildRange = 1;
-	
 	public Worker(){
-		super(100, 2, 5, 1, true, true);
+		super(100, 2, 1, 5, 1, true, true);
 	}
 
 	public Building constructBuilding(int resourcesAvail, String building){

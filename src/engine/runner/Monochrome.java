@@ -92,13 +92,12 @@ public class Monochrome implements Runnable{
 				options.add("Move");
 				options.add("Attack");
 				options.add("Claim");
-				if(this.gameBoard.getTiles().get(r).get(c).getUnit() instanceof Worker){
-					options.add("Build");
+				if(this.gameBoard.getTiles().get(r).get(c).getUnit().canMine())
 					options.add("Mine");
-				}
-				if(this.gameBoard.getTiles().get(r).get(c).getBuilding() instanceof Building){
+				if(this.gameBoard.getTiles().get(r).get(c).getUnit().canBuild())
+					options.add("Build");
+				if(this.gameBoard.getTiles().get(r).get(c).getBuilding() instanceof Building)
 					options.add("Produce");
-				}
 			}
 		}
 		//Allow the user to select their option - Update the UI
