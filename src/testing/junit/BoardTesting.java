@@ -25,7 +25,7 @@ public class BoardTesting extends TestCase {
 	public void setUp(){
 		BoardParser parser = new BoardParser( "./data/sample.txt");
 		try {
-			this.board = parser.getBoard();
+			this.board = parser.parseBoard();
 		} catch (IOException | MisconfiguredMapException e) {
 			e.printStackTrace();
 		}	
@@ -73,7 +73,7 @@ public class BoardTesting extends TestCase {
 		this.board.takeTile(0, 0);
 		assertEquals(Owner.Light, this.board.getTiles().get(0).get(0).getOwner());
 		//Manually swap turn
-		this.board.pid = 1;
+		this.board.pid = 4;
 		this.board.takeTile(0, 0);
 		assertEquals(Owner.Neutral, this.board.getTiles().get(0).get(0).getOwner());
 		this.board.takeTile(0, 0);

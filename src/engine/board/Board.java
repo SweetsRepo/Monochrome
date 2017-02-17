@@ -46,6 +46,8 @@ public class Board {
 		this.tiles = new ArrayList<ArrayList<Tile>>();
 		this.tilesAvailable = new ArrayList<Tile>();
 		this.tilesByPlayer = new Hashtable<Owner, ArrayList<Tile>>();
+		this.tilesByPlayer.put(Owner.Light, new ArrayList<Tile>());
+		this.tilesByPlayer.put(Owner.Dark, new ArrayList<Tile>());
 		this.players = new ArrayList<Player>();
 		this.pid = 0;
 	}
@@ -55,12 +57,17 @@ public class Board {
 	 * @return Board Object
 	 */
 	public static Board getInstance(){
-		if( instance == null){
-			instance = new Board();
-			return instance;
-		}
-		else
-			return instance;
+		return instance;
+	}
+	
+	/**
+	 * Resets the board to initial state. Allows for reparsing
+	 * of a board file (I.E. Changing from one match to another)
+	 * @return Board Object
+	 */
+	public static Board getNewInstance(){
+		instance = new Board();
+		return instance;
 	}
 	
 	/**
@@ -260,10 +267,13 @@ public class Board {
 			//If neutral tile add to the player who's unit is currently on it
 			if(this.tiles.get(r).get(c).owner == Owner.Neutral){
 				this.tilesByPlayer.get(this.getPlayers()[this.pid].getFaction()).add(this.tiles.get(r).get(c));
+				this.tiles.get(r).get(c).owner = this.getPlayers()[this.pid].getFaction();
 			}
-			else{
+			//If enemy tile remove it from the other players control
+			else if(this.tiles.get(r).get(c).owner != this.getPlayers()[this.pid].getFaction()){
 				//Remove the tile from the other players control
 				this.tilesByPlayer.get(Owner.getOpposite(this.getPlayers()[this.pid].getFaction())).remove(this.tiles.get(r).get(c));
+				this.tiles.get(r).get(c).owner = Owner.Neutral;
 			}
 		}
 		//Do nothing case
@@ -358,6 +368,6 @@ public class Board {
 	}
 	
 	public Player[] getPlayers(){
-		return (Player[])(this.players.toArray());
+		return this.players.toArray(new Player[]{});
 	}
 }

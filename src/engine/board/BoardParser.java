@@ -62,7 +62,7 @@ public class BoardParser {
 					break;
 				case "Mapping:":
 					//Get an instance of the board. Should only be called once, when initializing the game
-					this.gameBoard = Board.getInstance();
+					this.gameBoard = Board.getNewInstance();
 					for(int r = 0; r < this.height; r++){
 						ArrayList<Tile> row = new ArrayList<Tile>();
 						//Convert all to upper case to avoid confusion in case statements below
@@ -128,16 +128,6 @@ public class BoardParser {
 		}
 		textReader.close();
 		return gameBoard;
-	}
-	
-	/**
-	 * Parses the board and returns it. Single Board instance per game - only called once
-	 * @return - Board, dependent on input file
-	 * @throws IOException - 
-	 * @throws MisconfiguredMapException - Returns number of line which was not properly setup
-	 */
-	public Board getBoard() throws IOException, MisconfiguredMapException{
-		return this.parseBoard();
 	}
 	
 	//Tester

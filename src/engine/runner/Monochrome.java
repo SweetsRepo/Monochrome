@@ -40,7 +40,7 @@ public class Monochrome implements Runnable{
 		String fname = scan.next();
 		BoardParser mapLoader = new BoardParser(fname);
 		try {
-			this.gameBoard = mapLoader.getBoard();
+			this.gameBoard = mapLoader.parseBoard();
 			this.players = this.gameBoard.getPlayers();
 		} catch (IOException | MisconfiguredMapException e) {
 			e.printStackTrace();
