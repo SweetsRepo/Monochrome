@@ -1,4 +1,4 @@
-package engine.buildings;
+package game.buildings;
 
 public interface FactoryPattern {
 	

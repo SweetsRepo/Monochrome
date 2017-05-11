@@ -1,7 +1,7 @@
-package engine.units;
+package game.units;
 
-import engine.buildings.*;
-import engine.runner.GameSettings;
+import game.buildings.*;
+import game.runner.GameSettings;
 
 /**
  * Defines the worker unit who creates new buildings for the player

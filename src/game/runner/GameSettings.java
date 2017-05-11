@@ -1,4 +1,4 @@
-package engine.runner;
+package game.runner;
 
 /**
  * Class containing constants and variables relating to the game settings

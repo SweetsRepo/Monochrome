@@ -1,4 +1,4 @@
-package engine.buildings;
+package game.buildings;
 
 /**
  * Boosts the defense of any unit on the given tile

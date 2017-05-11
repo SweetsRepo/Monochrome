@@ -1,4 +1,4 @@
-package engine.units;
+package game.units;
 
 public class Swarm extends Unit {
 

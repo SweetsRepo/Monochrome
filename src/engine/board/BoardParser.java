@@ -1,10 +1,10 @@
 package engine.board;
 
 import engine.exceptions.MisconfiguredMapException;
-import engine.runner.DarkPlayer;
-import engine.runner.LightPlayer;
-import engine.runner.Player;
-import engine.units.Commander;
+import game.runner.DarkPlayer;
+import game.runner.LightPlayer;
+import game.runner.Player;
+import game.units.Commander;
 
 import java.io.FileReader;
 import java.io.IOException;

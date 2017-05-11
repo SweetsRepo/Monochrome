@@ -1,6 +1,6 @@
 package engine.board;
 
-import engine.runner.Player;
+import game.runner.Player;
 
 /**
  * Tile which may only be mined by Light type units

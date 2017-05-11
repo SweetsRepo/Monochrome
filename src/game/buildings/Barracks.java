@@ -1,7 +1,7 @@
-package engine.buildings;
+package game.buildings;
 
-import engine.runner.GameSettings;
-import engine.units.*;
+import game.runner.GameSettings;
+import game.units.*;
 
 /**
  * Building which will allow the player to build units

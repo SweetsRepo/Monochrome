@@ -1,4 +1,4 @@
-package engine.buildings;
+package game.buildings;
 
 /**
  * Building which will allow the player to upgrade their current units

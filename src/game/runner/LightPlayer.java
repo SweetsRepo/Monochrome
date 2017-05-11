@@ -1,4 +1,4 @@
-package engine.runner;
+package game.runner;
 
 import engine.board.Owner;
 

@@ -1,14 +1,14 @@
-package engine.runner;
+package game.runner;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import engine.board.*;
-import engine.buildings.Building;
 import engine.exceptions.MisconfiguredMapException;
-import engine.units.Unit;
-import engine.units.Worker;
+import game.buildings.Building;
+import game.units.Unit;
+import game.units.Worker;
 
 /**
  * Class which will actually start the game instance. Main Thread
@@ -23,9 +23,6 @@ public class Monochrome implements Runnable{
 	//ArrayList of all the player threads.
 	protected Player[] players;
 	
-	public Monochrome() {
-		
-	}
 
 	/**
 	 * Run method must create additional threads for the players, parse and create the board,
@@ -113,7 +110,7 @@ public class Monochrome implements Runnable{
 			choice = scan.nextLine();
 		}
 		//Tiles which are available for the selected action
-		ArrayList<Tile> availableTiles;
+		ArrayList<Coordinate> availableTiles;
 		int row;
 		int col;
 		switch(choice){
@@ -159,7 +156,7 @@ public class Monochrome implements Runnable{
 				System.out.println("Enter the name of the unit type you would like to build");
 				choice = scan.nextLine();
 				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
-					this.gameBoard.produceOnTile(row, col, choice);
+					this.gameBoard.createOnTile(row, col, choice);
 				break;
 			case "Mine":
 				//Add the resources gained from mining to the player's resources

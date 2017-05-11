@@ -5,9 +5,9 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
-import engine.runner.GameSettings;
-import engine.runner.Monochrome;
-import engine.runner.Player;
+import game.runner.GameSettings;
+import game.runner.Monochrome;
+import game.runner.Player;
 
 public class PlayerThreadTesting extends TestCase {
 

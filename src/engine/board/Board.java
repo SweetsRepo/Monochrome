@@ -3,16 +3,17 @@ package engine.board;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.TreeSet;
 
-import engine.buildings.Barracks;
-import engine.buildings.Building;
 import engine.exceptions.MisconfiguredMapException;
-import engine.runner.Player;
-import engine.units.Commander;
-import engine.units.Unit;
-import engine.units.Worker;
+import game.buildings.Barracks;
+import game.buildings.Building;
+import game.runner.Player;
+import game.units.Commander;
+import game.units.Unit;
+import game.units.Worker;
 
 /**
  * Implements the singular board which will contain most data members for the game. Additionally algorithms
@@ -28,7 +29,8 @@ public class Board {
 	protected ArrayList<ArrayList<Tile>> tiles;
 	
 	//List of the tile available for a chosen action
-	private ArrayList<Tile> tilesAvailable;
+	private HashSet<Coordinate> tilesAvailable;
+	
 
 	//Dictionary representing Tiles controlled by each player - References will only be kept for Light and Dark, not Neutral
 	private Hashtable<Owner, ArrayList<Tile>> tilesByPlayer;
@@ -44,7 +46,7 @@ public class Board {
 	 */
 	private Board(){
 		this.tiles = new ArrayList<ArrayList<Tile>>();
-		this.tilesAvailable = new ArrayList<Tile>();
+		this.tilesAvailable = new HashSet<Coordinate>();
 		this.tilesByPlayer = new Hashtable<Owner, ArrayList<Tile>>();
 		this.tilesByPlayer.put(Owner.Light, new ArrayList<Tile>());
 		this.tilesByPlayer.put(Owner.Dark, new ArrayList<Tile>());
@@ -76,8 +78,8 @@ public class Board {
 	 * @param c - column index
 	 * @return - List of all the tiles to attack
 	 */
-	public synchronized ArrayList<Tile> findAvailableAttacks(int r, int c){
-		ArrayList<Tile> attackTiles;
+	public synchronized ArrayList<Coordinate> findAvailableAttacks(int r, int c){
+		ArrayList<Coordinate> attackTiles;
 		this.tilesAvailable.clear();
 		if(this.tiles.get(r).get(c).isOccupied){
 			//Treat the tile that the unit is on as unoccupied, as we want moving to the same tile to be a valid movement
@@ -87,7 +89,7 @@ public class Board {
 			return attackTiles;
 		}
 		else{
-			return new ArrayList<Tile>();
+			return new ArrayList<Coordinate>();
 		}	
 	}
 	
@@ -98,10 +100,11 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the tiles to attack
 	 */
-	private ArrayList<Tile> availableAttacksDFS(int r, int c, int depth){
+	private ArrayList<Coordinate> availableAttacksDFS(int r, int c, int depth){
 		//If there's a unit on the tile and it hasn't been found already, add it to the list
-		if(this.tiles.get(r).get(c).isOccupied && !this.tilesAvailable.contains(this.tiles.get(r).get(c)))
-			this.tilesAvailable.add(this.tiles.get(r).get(c));
+		Coordinate coor = new Coordinate(r, c);
+		if(this.tiles.get(r).get(c).isOccupied)
+			this.tilesAvailable.add(coor);
 		//Make sure the recursive depth hasn't been reached
 		if(depth == 0){
 			//End recursive depth
@@ -124,10 +127,10 @@ public class Board {
 			if(r + 1 <= this.tiles.size() && c + 1 <= this.tiles.get(r).size())
 				availableAttacksDFS(r + 1, c + 1, depth - 1);
 			//All paths exhausted return the result
-			return this.tilesAvailable;
+			return new ArrayList<Coordinate>(this.tilesAvailable);
 		}
 		//Terminate end of path results
-		return this.tilesAvailable;
+		return new ArrayList<Coordinate>();
 	}
 	
 	/**
@@ -137,8 +140,8 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the available tiles to move to
 	 */
-	public synchronized ArrayList<Tile> findAvailableMoves(int r, int c){
-		ArrayList<Tile> moveTiles;
+	public synchronized ArrayList<Coordinate> findAvailableMoves(int r, int c){
+		ArrayList<Coordinate> moveTiles;
 		this.tilesAvailable.clear();
 		if(this.tiles.get(r).get(c).isOccupied){
 			//Treat the tile that the unit is on as unoccupied, as we want moving to the same tile to be a valid movement
@@ -148,7 +151,7 @@ public class Board {
 			return moveTiles;
 		}
 		else{
-			return new ArrayList<Tile>();
+			return new ArrayList<Coordinate>();
 		}	
 	}
 	
@@ -159,20 +162,19 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the available tiles to move to
 	 */
-	private ArrayList<Tile> availableMovesDFS(int r, int c, int depth){
+	private ArrayList<Coordinate> availableMovesDFS(int r, int c, int depth){
+		Coordinate coor = new Coordinate(r, c);
 		//Make sure that the recursive depth hasn't been reached
 		if(depth == 0){
-			if(!this.tilesAvailable.contains(this.tiles.get(r).get(c)) && !(this.tiles.get(r).get(c).isOccupied))
-				this.tilesAvailable.add(this.tiles.get(r).get(c));
+			if(!(this.tiles.get(r).get(c).isOccupied))
+				this.tilesAvailable.add(coor);
 			//End of recursive depth
 		}
 		//Add the tile to available moves and recurse to the next set
 		else{
 			//Make sure to truncate any paths which are blocked by occupied tiles
 			if(!this.tiles.get(r).get(c).isOccupied){
-				//Don't allow for any duplicate tiles
-				if(!this.tilesAvailable.contains(this.tiles.get(r).get(c)))
-					this.tilesAvailable.add(this.tiles.get(r).get(c));
+				this.tilesAvailable.add(coor);
 				if(r - 1 >= 0)
 					availableMovesDFS(r - 1, c, depth - 1);
 				if(c - 1 >= 0)
@@ -182,11 +184,11 @@ public class Board {
 				if(c + 1 <= this.tiles.get(r).size() - 1)
 					availableMovesDFS(r, c + 1, depth - 1);
 				//All paths exhausted, return the result
-				return this.tilesAvailable;
+				return new ArrayList<Coordinate>(this.tilesAvailable);
 			}
 		}
 		//Terminate end of depth runs.
-		return null;
+		return new ArrayList<Coordinate>();
 	}
 	
 	/**
@@ -196,8 +198,8 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the available build options
 	 */
-	public synchronized ArrayList<Tile> findAvailableBuilds(int r, int c){
-		ArrayList<Tile> buildTiles;
+	public synchronized ArrayList<Coordinate> findAvailableBuilds(int r, int c){
+		ArrayList<Coordinate> buildTiles;
 		this.tilesAvailable.clear();
 		if(this.tiles.get(r).get(c).isOccupied){
 			//Treat the tile that the unit is on as unoccupied, as building on the same tile is allowable
@@ -207,7 +209,7 @@ public class Board {
 			return buildTiles;
 		}
 		else{
-			return new ArrayList<Tile>();
+			return new ArrayList<Coordinate>();
 		}
 	}
 	
@@ -218,20 +220,19 @@ public class Board {
 	 * @param depth - remaining depth to search
 	 * @return - List of all the available build options
 	 */
-	private ArrayList<Tile> availableBuildDFS(int r, int c, int depth){
+	private ArrayList<Coordinate> availableBuildDFS(int r, int c, int depth){
+		Coordinate coor = new Coordinate(r, c);
 		//Make sure that the recursive depth hasn't been reached
 		if(depth == 0){
-			if(!this.tilesAvailable.contains(this.tiles.get(r).get(c)) && !(this.tiles.get(r).get(c).isOccupied))
-				this.tilesAvailable.add(this.tiles.get(r).get(c));
+			if(!(this.tiles.get(r).get(c).isOccupied))
+				this.tilesAvailable.add(coor);
 			//End of recursive depth
 		}
 		//Add the tile to available moves and recurse to the next set
 		else{
 			//Make sure to truncate any paths which are blocked by occupied tiles
 			if(!this.tiles.get(r).get(c).isOccupied){
-				//Don't allow for any duplicate tiles
-				if(!this.tilesAvailable.contains(this.tiles.get(r).get(c)))
-					this.tilesAvailable.add(this.tiles.get(r).get(c));
+				this.tilesAvailable.add(coor);
 				if(r - 1 >= 0)
 					availableBuildDFS(r - 1, c, depth - 1);
 				if(c - 1 >= 0)
@@ -249,11 +250,11 @@ public class Board {
 				if(r + 1 <= this.tiles.size() && c + 1 <= this.tiles.get(r).size())
 					availableBuildDFS(r + 1, c + 1, depth - 1);
 				//All paths exhausted, return the result
-				return this.tilesAvailable;
+				return new ArrayList<Coordinate>(this.tilesAvailable);
 			}
 		}
 		//Terminate end of depth runs.
-		return null;
+		return new ArrayList<Coordinate>();
 	}
 	
 	/**
@@ -296,22 +297,22 @@ public class Board {
 	}
 	
 	/**
-	 * Attacks the unit at tile[er, ec] with unit at tile[sr, sc]
+	 * Attacks the unit at tile[tr, tc] with unit at tile[sr, sc]
 	 * If the unit is killed the attacker moves up to the new tile
-	 * @param sr - start row
-	 * @param sc - start column 
-	 * @param er - end row
-	 * @param ec - end column
+	 * @param sr - source row
+	 * @param sc - source column 
+	 * @param tr - target row
+	 * @param tc - target column
 	 */
-	public synchronized void attackUnit(int sr, int sc, int er, int ec){
-		Unit underAttack = this.tiles.get(er).get(ec).getUnit();
+	public synchronized void attackUnit(int sr, int sc, int tr, int tc){
+		Unit underAttack = this.tiles.get(tr).get(tc).getUnit();
 		Unit dealingAttack = this.tiles.get(sr).get(sc).getUnit();
 		//DamageDealt method returns a boolean indicating if the unit under attack is still alive post attack
 		if(underAttack.damageDealt(dealingAttack.getAttDamage())){
-			this.tiles.get(er).get(ec).removeUnit();
+			this.tiles.get(tr).get(tc).removeUnit();
 			//NOTE: Create a reference from the unit to it's controlling player
 			//Remove the unit from the player's unit list
-			this.moveUnit(sr, sc, er, ec);
+			this.moveUnit(sr, sc, tr, tc);
 		}
 	}
 	
@@ -333,17 +334,17 @@ public class Board {
 	 * @param c - column index
 	 * @param unit - String representation of the unit
 	 */
-	public synchronized void produceOnTile(int r, int c, String unit){
-		Unit produce = ((Barracks)(this.tiles.get(r).get(c).getBuilding())).constructUnit(this.getPlayers()[this.pid].getResources(), unit);
-		if(produce != null)
-			this.tiles.get(r).get(c).setUnit(produce);
+	public synchronized void createOnTile(int r, int c, String unit){
+		Unit create = ((Barracks)(this.tiles.get(r).get(c).getBuilding())).constructUnit(this.getPlayers()[this.pid].getResources(), unit);
+		if(create != null)
+			this.tiles.get(r).get(c).setUnit(create);
 	}
 	
-	public ArrayList<Tile> getTilesAvailable() {
+	public HashSet<Coordinate> getTilesAvailable() {
 		return tilesAvailable;
 	}
 
-	public void setTilesAvailable(ArrayList<Tile> tilesAvailable) {
+	public void setTilesAvailable(HashSet<Coordinate> tilesAvailable) {
 		this.tilesAvailable = tilesAvailable;
 	}
 

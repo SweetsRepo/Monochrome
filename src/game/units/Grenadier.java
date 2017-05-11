@@ -1,4 +1,4 @@
-package engine.units;
+package game.units;
 
 public class Grenadier extends Unit {
 

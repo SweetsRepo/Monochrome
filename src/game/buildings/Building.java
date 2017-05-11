@@ -1,4 +1,4 @@
-package engine.buildings;
+package game.buildings;
 
 /**
  * Building superclass which defines traits that all buildings shall have

@@ -1,9 +1,9 @@
-package engine.runner;
+package game.runner;
 
 import engine.board.Board;
 import engine.board.Owner;
 import engine.board.Tile;
-import engine.units.Unit;
+import game.units.Unit;
 
 import java.util.ArrayList;
 
