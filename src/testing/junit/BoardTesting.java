@@ -89,10 +89,11 @@ public class BoardTesting extends TestCase {
 	@Test
 	public void testMoveUnit(){
 		ArrayList<Coordinate> moves = this.board.findAvailableMoves(4, 2);
-		for(Coordinate coor: moves){
-			System.out.println(coor.row+","+coor.col);
-		}
-		
+		this.board.moveUnit(4, 2, 4, 0);
+		assertFalse(this.board.getTiles().get(4).get(2).isOccupied());
+		assertNull(this.board.getTiles().get(4).get(2).getUnit());
+		assertTrue(this.board.getTiles().get(4).get(0).isOccupied());
+		assertNotNull(this.board.getTiles().get(4).get(0).getUnit());
 	}
 	
 	/**
@@ -102,15 +103,29 @@ public class BoardTesting extends TestCase {
 	 */
 	@Test
 	public void testAttackUnit(){
+		ArrayList<Coordinate> attacks = this.board.findAvailableAttacks(4, 2);
+		for(int i = 0; i < 9; i++){
+			this.board.attackUnit(4, 2, 3, 3);
+			assertNotNull(this.board.getTiles().get(3).get(3).getUnit());
+		}
+		this.board.attackUnit(4, 2, 3, 3);
+		assertNull(this.board.getTiles().get(3).get(3).getUnit());
 		
 	}
 	
 	/**
 	 * Tests the ability to build buildings on a tile
+	 * 
+	 * TODO: Can only build on the tile that your unit is on. Fix this so it uses builds list
 	 */
 	@Test
 	public void testBuildOnTile(){
-		
+		ArrayList<Coordinate> builds = this.board.findAvailableBuilds(4, 2);
+		for(Coordinate coor: builds){
+			System.out.println(coor.row + "," + coor.col);
+		}
+		this.board.buildOnTile(4, 2, "Barracks");
+		assertTrue(this.board.getTiles().get(6).get(3).isOccupied());
 	}
 	
 	/**

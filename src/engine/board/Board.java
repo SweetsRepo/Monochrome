@@ -312,7 +312,7 @@ public class Board {
 			this.tiles.get(tr).get(tc).removeUnit();
 			//NOTE: Create a reference from the unit to it's controlling player
 			//Remove the unit from the player's unit list
-			this.moveUnit(sr, sc, tr, tc);
+			
 		}
 	}
 	
