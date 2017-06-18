@@ -12,6 +12,7 @@ import engine.board.Coordinate;
 import engine.board.Owner;
 import engine.board.Tile;
 import engine.exceptions.MisconfiguredMapException;
+import game.units.Heavy;
 import junit.framework.TestCase;
 
 public class BoardTesting extends TestCase {
@@ -88,7 +89,6 @@ public class BoardTesting extends TestCase {
 	 */
 	@Test
 	public void testMoveUnit(){
-		ArrayList<Coordinate> moves = this.board.findAvailableMoves(4, 2);
 		this.board.moveUnit(4, 2, 4, 0);
 		assertFalse(this.board.getTiles().get(4).get(2).isOccupied());
 		assertNull(this.board.getTiles().get(4).get(2).getUnit());
@@ -103,7 +103,6 @@ public class BoardTesting extends TestCase {
 	 */
 	@Test
 	public void testAttackUnit(){
-		ArrayList<Coordinate> attacks = this.board.findAvailableAttacks(4, 2);
 		for(int i = 0; i < 9; i++){
 			this.board.attackUnit(4, 2, 3, 3);
 			assertNotNull(this.board.getTiles().get(3).get(3).getUnit());
@@ -120,11 +119,7 @@ public class BoardTesting extends TestCase {
 	 */
 	@Test
 	public void testBuildOnTile(){
-		ArrayList<Coordinate> builds = this.board.findAvailableBuilds(4, 2);
-		for(Coordinate coor: builds){
-			System.out.println(coor.row + "," + coor.col);
-		}
-		this.board.buildOnTile(4, 2, "Barracks");
+		this.board.buildOnTile(4, 2, 6, 3, "Barracks");
 		assertTrue(this.board.getTiles().get(6).get(3).isOccupied());
 	}
 	
@@ -134,15 +129,27 @@ public class BoardTesting extends TestCase {
 	 */
 	@Test
 	public void testMineOnTile(){
-		
+		assertEquals(this.board.mineTile(4,2), 100);
+		assertEquals(this.board.mineTile(4,2), 1);
+		assertEquals(this.board.mineTile(4,2), 0);
+
 	}
 	
 	/**
-	 * Tests the ability to create a unit on tile
+	 * Tests the ability to create a unit on tile and then move them out.
+	 * Further tests attempts to overwrite the unit on tile. This will be checked on the frontend
 	 */
 	@Test
 	public void testCreateOnTile(){
-		
+		this.board.buildOnTile(4, 2, 6, 3, "Barracks");
+		assertTrue(this.board.getTiles().get(6).get(3).isOccupied());
+		this.board.createOnTile(6, 3, "Scout");
+		assertNotNull(this.board.getTiles().get(6).get(3).getUnit());
+		this.board.moveUnit(6, 3, 6, 2);
+		assertNull(this.board.getTiles().get(6).get(3).getUnit());
+		this.board.createOnTile(6, 3, "Scout");
+		this.board.createOnTile(6, 3, "Heavy");
+		assertTrue(this.board.getTiles().get(6).get(3).getUnit() instanceof Heavy);
 	}
 	
 }

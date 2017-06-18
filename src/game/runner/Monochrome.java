@@ -145,7 +145,7 @@ public class Monochrome implements Runnable{
 				System.out.println("Enter the name of the building type you would like to build");
 				choice = scan.nextLine();
 				if(availableTiles.contains(this.gameBoard.getTiles().get(row).get(col)))
-					this.gameBoard.buildOnTile(row, col, choice);
+					this.gameBoard.buildOnTile(r, c, row, col, choice);
 				break;
 			case "Produce":
 				availableTiles = this.gameBoard.findAvailableBuilds(r, c);

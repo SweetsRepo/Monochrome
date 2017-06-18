@@ -1,8 +1,9 @@
 package game.units;
 
 import engine.board.Owner;
+import game.buildings.FactoryPattern;
 
-public class Commander extends Unit {
+public class Commander extends Unit implements FactoryPattern{
 
 	/**
 	 * hp = 100, moves = 3, damage = 10, Attack range = 2, cannot mine, can build

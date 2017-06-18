@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import engine.exceptions.MisconfiguredMapException;
 import game.buildings.Barracks;
 import game.buildings.Building;
+import game.buildings.FactoryPattern;
 import game.runner.Player;
 import game.units.Commander;
 import game.units.Unit;
@@ -318,14 +319,16 @@ public class Board {
 	
 	/**
 	 * Builds the building specified by the string on tile (r,c)
-	 * @param r - row index
-	 * @param c - column index
+	 * @param sr - source row
+	 * @param sc - source column 
+	 * @param tr - target row
+	 * @param tc - target column
 	 * @param unit - String representation of the building
 	 */
-	public synchronized void buildOnTile(int r, int c, String building){
-		Building build = ((Worker)(this.tiles.get(r).get(c).getUnit())).constructBuilding(this.getPlayers()[this.pid].getResources(), building);
+	public synchronized void buildOnTile(int sr, int sc, int tr, int tc, String building){
+		Building build = ((FactoryPattern)this.tiles.get(sr).get(sc).getUnit()).constructBuilding(this.getPlayers()[this.pid].getResources(), building);
 		if(build != null)
-			this.tiles.get(r).get(c).setBuilding(build);
+			this.tiles.get(tr).get(tc).setBuilding(build);
 	}
 	
 	/**
@@ -338,6 +341,16 @@ public class Board {
 		Unit create = ((Barracks)(this.tiles.get(r).get(c).getBuilding())).constructUnit(this.getPlayers()[this.pid].getResources(), unit);
 		if(create != null)
 			this.tiles.get(r).get(c).setUnit(create);
+	}
+	
+	/**
+	 * Mines on the specified tile
+	 * @param r - row index
+	 * @param c - column index
+	 * @return Value of mined amount
+	 */
+	public synchronized int mineTile(int r, int c){
+		return this.tiles.get(r).get(c).mine();
 	}
 	
 	public HashSet<Coordinate> getTilesAvailable() {

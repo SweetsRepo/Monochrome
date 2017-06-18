@@ -113,24 +113,11 @@ public abstract class Unit {
 	}
 
 	/**
-	  * States if the unit is alive or not
-	  */
-	private boolean isAlive(){
-		int unitHp = this.getHp();
-		if (unitHp <= 0){
-			return true;
-		}
-		else return false;
-		
-	}
-
-	/**
 	  * Whenever damage is done, resets HP and checks to see if the unit is alive
 	  */
 	public boolean damageDealt(int damage){
-		int unitHp = this.getHp();
-		this.setHp(unitHp - damage);
-		return isAlive();
+		this.setHp(this.getHp() - damage);
+		return this.getHp() <= 0;
 	}
 	
 		

@@ -34,7 +34,7 @@ public abstract class Tile {
 	 * Default Constructor - Makes tile with no resources by default.
 	 */
 	public Tile (){
-		this.resources = 0;
+		this.resources = 101;
 		this.isOccupied = false;
 		this.unit = null;
 		this.building = null;
